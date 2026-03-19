@@ -6,13 +6,23 @@
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://github.com/org/repo?tab=readme-ov-file#credentials"
+				"url": "https://liveblocks.io/docs/api-reference/rest-api-endpoints#Auth"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://github.com/org/repo?tab=readme-ov-file"
+				"url": "https://liveblocks.io/docs/"
 			}
 		]
-	}
+	},
+	"alias": [
+		"liveblocks",
+		"collaboration",
+		"realtime",
+		"storage",
+		"yjs",
+		"hitl",
+		"comments",
+		"notifications"
+	]
 }

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports, import-x/no-unresolved -- dev-only OpenAPI codegen (devDependency)
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports -- dev-only OpenAPI codegen dependency
 import { defineConfig } from '@hey-api/openapi-ts';
 
 // TODO: use tagged version of the OpenAPI spec
