@@ -1,0 +1,50 @@
+{
+	"name": "n8n-nodes-liveblocks",
+	"version": "0.1.0",
+	"description": "Official Liveblocks n8n community nodes",
+	"license": "MIT",
+	"homepage": "https://liveblocks.io",
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"author": {
+		"name": "Jonathan Rowny",
+		"email": "jrowny@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/liveblocks/n8n-nodes-liveblocks"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+        "generate:client": "openapi-ts",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [],
+		"nodes": [
+			"dist/nodes/Liveblocks/Liveblocks.node.js"
+		]
+	},
+	"devDependencies": {
+		"@hey-api/openapi-ts": "0.94.3",
+		"@n8n/node-cli": "*",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^19.0.4",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
