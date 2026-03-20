@@ -26,7 +26,7 @@
 	},
 	"scripts": {
 		"build": "n8n-node build",
-		"generate:client": "openapi-ts",
+		"generate:client": "npx --yes @hey-api/openapi-ts@0.94.3 -i https://raw.githubusercontent.com/liveblocks/liveblocks/refs/heads/main/docs/references/v2.openapi.json -o nodes/Liveblocks/client",
 		"build:watch": "tsc --watch",
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
@@ -49,7 +49,6 @@
 		]
 	},
 	"devDependencies": {
-		"@hey-api/openapi-ts": "0.94.3",
 		"@n8n/node-cli": "*",
 		"eslint": "9.32.0",
 		"prettier": "3.6.2",

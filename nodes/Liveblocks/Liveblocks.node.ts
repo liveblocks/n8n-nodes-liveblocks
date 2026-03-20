@@ -77,7 +77,7 @@ export class Liveblocks implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Liveblocks',
 		name: 'liveblocks',
-		icon: { light: 'file:liveblocks-icon-black.svg', dark: 'file:liveblocks-icon-white.svg' },
+		icon: 'file:liveblocks-icon-black.svg',
 		group: ['transform'],
 		version: [1],
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -110,7 +110,6 @@ export class Liveblocks implements INodeType {
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
-
 				const resource = this.getNodeParameter('resource', itemIndex) as string;
 				const operation = this.getNodeParameter('operation', itemIndex) as string;
 				const spec = OPERATION_MAP.get(operation);
@@ -137,7 +136,9 @@ export class Liveblocks implements INodeType {
 					path[key] = String(v).trim();
 				}
 
-				const queryRaw = spec.supportsQuery ? this.getNodeParameter('query', itemIndex, {}) : undefined;
+				const queryRaw = spec.supportsQuery
+					? this.getNodeParameter('query', itemIndex, {})
+					: undefined;
 				let query: Record<string, unknown> | undefined;
 				try {
 					query = spec.supportsQuery ? parseQueryInput(queryRaw) : undefined;
@@ -211,7 +212,11 @@ export class Liveblocks implements INodeType {
 					}
 					const buffer = Buffer.from(ab);
 					const prop = this.getNodeParameter('binaryOutputProperty', itemIndex, 'data') as string;
-					const fileName = this.getNodeParameter('binaryOutputFileName', itemIndex, 'liveblocks.bin') as string;
+					const fileName = this.getNodeParameter(
+						'binaryOutputFileName',
+						itemIndex,
+						'liveblocks.bin',
+					) as string;
 					const mime = this.getNodeParameter(
 						'binaryMimeType',
 						itemIndex,

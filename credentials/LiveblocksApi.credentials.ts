@@ -4,7 +4,7 @@ export class LiveblocksApi implements ICredentialType {
 	name = 'liveblocksApi';
 	displayName = 'Liveblocks API';
 	documentationUrl = 'https://liveblocks.io/docs/api-reference/rest-api-endpoints';
-	icon = 'file:../assets/liveblocks.svg' as const;
+	icon = 'file:liveblocks.svg' as const;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Secret Key',

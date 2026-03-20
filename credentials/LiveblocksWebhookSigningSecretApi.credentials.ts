@@ -5,7 +5,7 @@ export class LiveblocksWebhookSigningSecretApi implements ICredentialType {
 	name = 'liveblocksWebhookSigningSecretApi';
 	displayName = 'Liveblocks Webhook Signing Secret API';
 	documentationUrl = 'https://liveblocks.io/docs/platform/webhooks';
-	icon = 'file:../assets/liveblocks.svg' as const;
+	icon = 'file:liveblocks.svg' as const;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Webhook Signing Secret',
