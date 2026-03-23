@@ -1,4 +1,4 @@
-/* eslint-disable @n8n/community-nodes/credential-test-required -- disabled because webhooks can't be tested against an API */ 
+/* eslint-disable @n8n/community-nodes/credential-test-required -- disabled because webhooks can't be tested against an API */
 import type { ICredentialType, INodeProperties } from 'n8n-workflow';
 
 export class LiveblocksWebhookSigningSecretApi implements ICredentialType {

@@ -32,6 +32,7 @@
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
 		"release": "n8n-node release",
+		"format": "prettier nodes credentials --write",
 		"prepublishOnly": "n8n-node prerelease"
 	},
 	"files": [
