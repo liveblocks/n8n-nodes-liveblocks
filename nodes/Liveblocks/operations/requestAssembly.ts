@@ -176,7 +176,10 @@ function mergeDeep(
 	return target;
 }
 
-export function assembleQuery(operation: string, getParam: GetParam): Record<string, unknown> | undefined {
+export function assembleQuery(
+	operation: string,
+	getParam: GetParam,
+): Record<string, unknown> | undefined {
 	switch (operation) {
 		case 'getRooms': {
 			const q: Record<string, unknown> = {};
@@ -330,8 +333,7 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			const usersAccesses = accessRowsToCreateMap(getParam, 'createRoom_usersAccessEntries');
 			const groupsAccesses = accessRowsToCreateMap(getParam, 'createRoom_groupsAccessEntries');
 			const engineStr = str(getParam, 'createRoom_engine');
-			const engine =
-				engineStr === '1' ? 1 : engineStr === '2' ? 2 : undefined;
+			const engine = engineStr === '1' ? 1 : engineStr === '2' ? 2 : undefined;
 			if (organizationId !== undefined) body.organizationId = organizationId;
 			if (metadata !== undefined) body.metadata = metadata;
 			if (usersAccesses !== undefined) body.usersAccesses = usersAccesses;
@@ -447,7 +449,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				try {
 					comment.attachmentIds = JSON.parse(attachmentIdsRaw) as string[];
 				} catch {
-					comment.attachmentIds = attachmentIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+					comment.attachmentIds = attachmentIdsRaw
+						.split(',')
+						.map((s) => s.trim())
+						.filter(Boolean);
 				}
 			}
 			const body: Record<string, unknown> = { comment };
@@ -509,7 +514,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				try {
 					body.attachmentIds = JSON.parse(attachmentIdsRaw) as string[];
 				} catch {
-					body.attachmentIds = attachmentIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+					body.attachmentIds = attachmentIdsRaw
+						.split(',')
+						.map((s) => s.trim())
+						.filter(Boolean);
 				}
 			}
 			return body;
@@ -527,10 +535,14 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				try {
 					body.attachmentIds = JSON.parse(attachmentIdsRaw) as string[];
 				} catch {
-					body.attachmentIds = attachmentIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+					body.attachmentIds = attachmentIdsRaw
+						.split(',')
+						.map((s) => s.trim())
+						.filter(Boolean);
 				}
 			}
-			if (isEmptyObject(body)) throw new Error('Provide at least one of body, metadata, editedAt, attachmentIds');
+			if (isEmptyObject(body))
+				throw new Error('Provide at least one of body, metadata, editedAt, attachmentIds');
 			return body;
 		}
 		case 'addCommentReaction': {
@@ -587,7 +599,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				try {
 					body.groupIds = JSON.parse(groupIdsRaw) as string[];
 				} catch {
-					body.groupIds = groupIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+					body.groupIds = groupIdsRaw
+						.split(',')
+						.map((s) => s.trim())
+						.filter(Boolean);
 				}
 			}
 			if (userInfo !== undefined) body.userInfo = userInfo;
@@ -632,7 +647,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			if (!userId || !kind || !subjectId) {
 				throw new Error('userId, kind, and subjectId are required');
 			}
-			const activityData = parseJsonObject(getParam('triggerInboxNotification_activityData'), false);
+			const activityData = parseJsonObject(
+				getParam('triggerInboxNotification_activityData'),
+				false,
+			);
 			if (!activityData) throw new Error('activityData JSON is required');
 			const body: Record<string, unknown> = { userId, kind, subjectId, activityData };
 			const roomId = str(getParam, 'triggerInboxNotification_roomId');
@@ -654,7 +672,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				try {
 					body.memberIds = JSON.parse(memberIdsRaw) as string[];
 				} catch {
-					body.memberIds = memberIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+					body.memberIds = memberIdsRaw
+						.split(',')
+						.map((s) => s.trim())
+						.filter(Boolean);
 				}
 			}
 			if (organizationId !== undefined) body.organizationId = organizationId;
@@ -670,7 +691,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			try {
 				memberIds = JSON.parse(raw) as string[];
 			} catch {
-				memberIds = raw.split(',').map((s) => s.trim()).filter(Boolean);
+				memberIds = raw
+					.split(',')
+					.map((s) => s.trim())
+					.filter(Boolean);
 			}
 			if (!memberIds.length) throw new Error('At least one member ID is required');
 			return { memberIds };
@@ -682,7 +706,10 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			try {
 				memberIds = JSON.parse(raw) as string[];
 			} catch {
-				memberIds = raw.split(',').map((s) => s.trim()).filter(Boolean);
+				memberIds = raw
+					.split(',')
+					.map((s) => s.trim())
+					.filter(Boolean);
 			}
 			if (!memberIds.length) throw new Error('At least one member ID is required');
 			return { memberIds };
@@ -783,7 +810,8 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			if (providerApiKey !== undefined) body.providerApiKey = providerApiKey;
 			if (provider !== undefined) body.provider = provider;
 			if (providerModel !== undefined) body.providerModel = providerModel;
-			if (compatibleProviderName !== undefined) body.compatibleProviderName = compatibleProviderName;
+			if (compatibleProviderName !== undefined)
+				body.compatibleProviderName = compatibleProviderName;
 			if (providerBaseUrl !== undefined) body.providerBaseUrl = providerBaseUrl;
 			if (settings !== undefined) body.settings = settings;
 			if (providerOptions !== undefined) body.providerOptions = providerOptions;
@@ -808,4 +836,3 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			throw new Error(`No structured body assembler for operation: ${operation}`);
 	}
 }
-

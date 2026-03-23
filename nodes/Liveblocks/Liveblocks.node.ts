@@ -252,9 +252,7 @@ export class Liveblocks implements INodeType {
 						if (
 							body === undefined ||
 							body === null ||
-							(typeof body === 'object' &&
-								!Array.isArray(body) &&
-								isEmptyObject(body))
+							(typeof body === 'object' && !Array.isArray(body) && isEmptyObject(body))
 						) {
 							throw new NodeOperationError(this.getNode(), 'Body is required for this operation', {
 								itemIndex,

@@ -1194,7 +1194,8 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'createAiCopilot_providerModel',
 			type: 'string',
 			default: '',
-			description: 'Model ID (e.g. gpt-4o, claude-sonnet-4-5-20250929, gemini-2.5-flash). Required for all providers.',
+			description:
+				'Model ID (e.g. gpt-4o, claude-sonnet-4-5-20250929, gemini-2.5-flash). Required for all providers.',
 			...showOp('createAiCopilot'),
 		},
 		{

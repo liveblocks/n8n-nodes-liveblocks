@@ -30,7 +30,11 @@ export type CommentBodyLink = {
 	text?: string;
 };
 
-export type CommentBodyElement = CommentBodyMention | CommentBodyLink | CommentBodyText | Record<string, unknown>;
+export type CommentBodyElement =
+	| CommentBodyMention
+	| CommentBodyLink
+	| CommentBodyText
+	| Record<string, unknown>;
 
 export type CommentBody = {
 	version: number;
@@ -141,10 +145,7 @@ export function getMentionsFromCommentBody(
 	const mentions: CommentBodyMention[] = [];
 
 	traverseCommentBody(body, 'mention', (mention) => {
-		if (
-			!mentionIds.has(mention.id) &&
-			(predicate ? predicate(mention) : true)
-		) {
+		if (!mentionIds.has(mention.id) && (predicate ? predicate(mention) : true)) {
 			mentionIds.add(mention.id);
 			mentions.push(mention);
 		}

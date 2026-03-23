@@ -37,7 +37,9 @@ export function operationsWithBinaryUpload(): string[] {
 }
 
 export function operationsWithBinaryDownload(): string[] {
-	return LIVEBLOCKS_OPERATIONS.filter((d) => d.responseMode === 'binaryDownload').map((d) => d.operation);
+	return LIVEBLOCKS_OPERATIONS.filter((d) => d.responseMode === 'binaryDownload').map(
+		(d) => d.operation,
+	);
 }
 
 export function operationsWithSplit(): string[] {
