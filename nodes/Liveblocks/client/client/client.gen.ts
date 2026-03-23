@@ -35,7 +35,7 @@ export const createClient = (config: Config = {}): Client => {
     const opts = {
       ..._config,
       ...options,
-      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
+      fetch: options.fetch ?? _config.fetch ?? fetch,
       headers: mergeHeaders(_config.headers, options.headers),
       serializedBody: undefined as string | undefined,
     };

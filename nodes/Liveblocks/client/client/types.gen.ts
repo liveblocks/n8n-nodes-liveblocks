@@ -20,7 +20,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Fetch API implementation. You can use this option to provide a custom
    * fetch instance.
    *
-   * @default globalThis.fetch
+   * @default fetch
    */
   fetch?: typeof fetch;
   /**

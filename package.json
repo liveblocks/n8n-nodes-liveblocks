@@ -26,7 +26,7 @@
 	},
 	"scripts": {
 		"build": "n8n-node build",
-		"generate:client": "npx --yes @hey-api/openapi-ts@0.94.3 -i https://raw.githubusercontent.com/liveblocks/liveblocks/refs/heads/main/docs/references/v2.openapi.json -o nodes/Liveblocks/client",
+		"generate:client": "npx --yes @hey-api/openapi-ts@0.94.3 -i https://raw.githubusercontent.com/liveblocks/liveblocks/refs/heads/main/docs/references/v2.openapi.json -o nodes/Liveblocks/client && node scripts/patch-openapi-codegen.mjs",
 		"build:watch": "tsc --watch",
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
