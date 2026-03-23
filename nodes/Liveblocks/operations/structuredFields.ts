@@ -512,7 +512,7 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			type: 'json',
 			default: '{}',
 			description:
-				'Optional `create` payload (`CreateRoomRequestBody`) merged when the room is created',
+				'Optional fields used when the room is created (no `ID` in the body — it comes from the path). When non-empty, must include `defaultAccesses` (array). May include organizationId, usersAccesses, groupsAccesses, metadata',
 			...showOp('upsertRoom'),
 		},
 	);
@@ -568,7 +568,8 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'setPresence_userInfo',
 			type: 'json',
 			default: '{}',
-			description: 'Optional name, avatar, color, etc',
+			required: true,
+			description: 'Metadata about the user or agent (name, avatar, color, etc.); use {} if none',
 			...showOp('setPresence'),
 		},
 		{
@@ -588,11 +589,9 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			displayName: 'Liveblocks Type',
 			name: 'initializeStorageDocument_liveblocksType',
 			type: 'options',
-			options: [
-				{ name: 'None (Empty Body)', value: '' },
-				{ name: 'LiveObject', value: 'LiveObject' },
-			],
-			default: '',
+			options: [{ name: 'LiveObject', value: 'LiveObject' }],
+			default: 'LiveObject',
+			required: true,
 			description: 'Root storage type when initializing',
 			...showOp('initializeStorageDocument'),
 		},
@@ -601,7 +600,8 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'initializeStorageDocument_data',
 			type: 'json',
 			default: '{}',
-			description: 'Optional initial Storage tree',
+			required: true,
+			description: 'Initial LiveObject data (use {} for empty)',
 			...showOp('initializeStorageDocument'),
 		},
 	);
@@ -638,6 +638,14 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'createThread_commentMetadata',
 			type: 'json',
 			default: '{}',
+			...showOp('createThread'),
+		},
+		{
+			displayName: 'Comment Attachment IDs',
+			name: 'createThread_commentAttachmentIds',
+			type: 'string',
+			default: '',
+			description: 'JSON array of attachment IDs or comma-separated list',
 			...showOp('createThread'),
 		},
 		{
@@ -980,6 +988,7 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'triggerInboxNotification_userId',
 			type: 'string',
 			default: '',
+			required: true,
 			...showOp('triggerInboxNotification'),
 		},
 		{
@@ -987,6 +996,9 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'triggerInboxNotification_kind',
 			type: 'string',
 			default: '',
+			required: true,
+			description:
+				'Notification kind. Custom kinds must start with $ and contain only letters and underscores (max 128 characters).',
 			...showOp('triggerInboxNotification'),
 		},
 		{
@@ -994,6 +1006,7 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'triggerInboxNotification_subjectId',
 			type: 'string',
 			default: '',
+			required: true,
 			...showOp('triggerInboxNotification'),
 		},
 		{
@@ -1008,6 +1021,7 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'triggerInboxNotification_activityData',
 			type: 'json',
 			default: '{}',
+			required: true,
 			...showOp('triggerInboxNotification'),
 		},
 		{
@@ -1025,7 +1039,8 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 			name: 'createGroup_id',
 			type: 'string',
 			default: '',
-			description: 'Required when creating a group',
+			required: true,
+			description: 'Unique group identifier',
 			...showOp('createGroup'),
 		},
 		{

@@ -89,7 +89,19 @@ export type UpdateRoomRequestBody = {
  */
 export type UpsertRoomRequestBody = {
     update: UpdateRoomRequestBody;
-    create?: CreateRoomRequestBody;
+    /**
+     * Fields to use when creating the room if it does not exist. Unlike the create-room endpoint, `id` is not included here because it is provided in the URL path.
+     */
+    create?: {
+        /**
+         * The organization ID to associate with the room. Defaults to "default" if not provided.
+         */
+        organizationId?: string;
+        defaultAccesses: RoomPermission;
+        usersAccesses?: RoomAccesses;
+        groupsAccesses?: RoomAccesses;
+        metadata?: RoomMetadata;
+    };
 };
 
 /**
@@ -147,7 +159,7 @@ export type SetPresenceRequestBody = {
     /**
      * Metadata about the user or agent
      */
-    userInfo?: {
+    userInfo: {
         /**
          * Optional name for the user or agent
          */
@@ -391,6 +403,7 @@ export type CreateThreadRequestBody = {
         createdAt?: string;
         body: CommentBody;
         metadata?: CommentMetadata;
+        attachmentIds?: Array<string>;
     };
     metadata?: ThreadMetadata;
 };
@@ -702,6 +715,9 @@ export type UserRoomSubscriptionSettings = {
  */
 export type TriggerInboxNotificationRequestBody = {
     userId: string;
+    /**
+     * A custom notification kind. Must start with '$' and contain only letters and underscores (max 128 characters).
+     */
     kind: string;
     subjectId: string;
     roomId?: string;
@@ -1023,7 +1039,7 @@ export type Group = {
     createdAt: string;
     updatedAt: string;
     scopes: {
-        mention?: boolean;
+        mention?: true;
     };
     members: Array<GroupMember>;
 };
@@ -1044,7 +1060,7 @@ export type CreateGroupRequestBody = {
     memberIds?: Array<string>;
     organizationId?: string;
     scopes?: {
-        mention?: boolean;
+        mention?: true;
     };
 };
 
@@ -1120,6 +1136,7 @@ export type ManagementProject = {
     teamId: string;
     type: ManagementProjectType;
     name: string;
+    description: string | null;
     createdAt: string;
     updatedAt: string;
     publicKey: ManagementProjectPublicKey;
@@ -1132,7 +1149,7 @@ export type ManagementProject = {
  * GetManagementProjectsResponse
  */
 export type GetManagementProjectsResponse = {
-    data?: Array<ManagementProject>;
+    data: Array<ManagementProject>;
     nextCursor: string | null;
 };
 
@@ -1141,6 +1158,7 @@ export type GetManagementProjectsResponse = {
  */
 export type CreateManagementProjectRequestBody = {
     name?: string;
+    description?: string;
     type: ManagementProjectType;
     versionCreationTimeout?: ManagementProjectVersionCreationTimeout;
 };
@@ -1150,6 +1168,7 @@ export type CreateManagementProjectRequestBody = {
  */
 export type UpdateManagementProjectRequestBody = {
     name?: string;
+    description?: string;
     versionCreationTimeout?: ManagementProjectVersionCreationTimeout;
 };
 
@@ -1291,7 +1310,7 @@ export type UpsertManagementWebhookHeadersResponse = {
  * GetManagementWebhooksResponse
  */
 export type GetManagementWebhooksResponse = {
-    data?: Array<ManagementWebhook>;
+    data: Array<ManagementWebhook>;
     nextCursor: string | null;
 };
 
@@ -1622,7 +1641,7 @@ export type UpsertRoomResponses = {
 export type UpsertRoomResponse = UpsertRoomResponses[keyof UpsertRoomResponses];
 
 export type UpdateRoomIdData = {
-    body?: UpdateRoomIdRequestBody;
+    body: UpdateRoomIdRequestBody;
     path: {
         /**
          * The new ID for the room
@@ -1664,7 +1683,7 @@ export type UpdateRoomIdResponses = {
 export type UpdateRoomIdResponse = UpdateRoomIdResponses[keyof UpdateRoomIdResponses];
 
 export type UpdateRoomOrganizationIdData = {
-    body?: UpdateRoomOrganizationIdRequestBody;
+    body: UpdateRoomOrganizationIdRequestBody;
     path: {
         /**
          * The ID of the room
@@ -1910,9 +1929,9 @@ export type GetStorageDocumentResponses = {
 export type GetStorageDocumentResponse2 = GetStorageDocumentResponses[keyof GetStorageDocumentResponses];
 
 export type InitializeStorageDocumentData = {
-    body?: {
-        liveblocksType?: 'LiveObject';
-        data?: {
+    body: {
+        liveblocksType: 'LiveObject';
+        data: {
             [key: string]: unknown;
         };
     };
@@ -2930,7 +2949,7 @@ export type AddCommentReactionResponses = {
 export type AddCommentReactionResponse = AddCommentReactionResponses[keyof AddCommentReactionResponses];
 
 export type RemoveCommentReactionData = {
-    body?: RemoveCommentReactionRequestBody;
+    body: RemoveCommentReactionRequestBody;
     path: {
         /**
          * ID of the room
@@ -3679,7 +3698,7 @@ export type GetRoomNotificationSettingsResponses = {
 export type GetRoomNotificationSettingsResponse = GetRoomNotificationSettingsResponses[keyof GetRoomNotificationSettingsResponses];
 
 export type UpdateRoomNotificationSettingsData = {
-    body?: UpdateRoomSubscriptionSettingsRequestBody;
+    body: UpdateRoomSubscriptionSettingsRequestBody;
     path: {
         /**
          * ID of the room
@@ -3723,7 +3742,7 @@ export type UpdateRoomNotificationSettingsResponses = {
 export type UpdateRoomNotificationSettingsResponse = UpdateRoomNotificationSettingsResponses[keyof UpdateRoomNotificationSettingsResponses];
 
 export type TriggerInboxNotificationData = {
-    body?: TriggerInboxNotificationRequestBody;
+    body: TriggerInboxNotificationRequestBody;
     path?: never;
     query?: never;
     url: '/inbox-notifications/trigger';
@@ -3826,7 +3845,7 @@ export type GetGroupsResponses = {
 export type GetGroupsResponse2 = GetGroupsResponses[keyof GetGroupsResponses];
 
 export type CreateGroupData = {
-    body?: CreateGroupRequestBody;
+    body: CreateGroupRequestBody;
     path?: never;
     query?: never;
     url: '/groups';

@@ -309,7 +309,7 @@ export function assembleQuery(operation: string, getParam: GetParam): Record<str
 	}
 }
 
-export function assembleBody(operation: string, bodyMode: BodyMode, getParam: GetParam): unknown {
+export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: GetParam): unknown {
 	if (RAW_BODY_OPERATIONS.has(operation)) {
 		const raw = getParam('body', {});
 		return parseJsonValue(raw);
@@ -371,6 +371,13 @@ export function assembleBody(operation: string, bodyMode: BodyMode, getParam: Ge
 			if (groupsAccesses !== undefined) update.groupsAccesses = groupsAccesses;
 			if (metadata !== undefined) update.metadata = metadata;
 			const createJson = parseJsonObject(getParam('upsertRoom_create'), true);
+			if (createJson !== undefined && Object.keys(createJson).length > 0) {
+				if (!Array.isArray(createJson.defaultAccesses)) {
+					throw new Error(
+						'Upsert `create` branch must include `defaultAccesses` (array of room permissions); `id` is not allowed (room id comes from the path)',
+					);
+				}
+			}
 			const out: Record<string, unknown> = { update };
 			if (createJson !== undefined) out.create = createJson;
 			if (isEmptyObject(update) && createJson === undefined) {
@@ -396,23 +403,26 @@ export function assembleBody(operation: string, bodyMode: BodyMode, getParam: Ge
 			if (!userId) throw new Error('userId is required');
 			const data = parseJsonObject(getParam('setPresence_data'), false);
 			if (!data) throw new Error('Presence data JSON is required');
-			const body: Record<string, unknown> = { userId, data };
 			const userInfo = parseJsonObject(getParam('setPresence_userInfo'), true);
+			const body: Record<string, unknown> = {
+				userId,
+				data,
+				userInfo: userInfo ?? {},
+			};
 			const ttl = num(getParam, 'setPresence_ttl');
-			if (userInfo !== undefined) body.userInfo = userInfo;
 			if (ttl !== undefined && ttl >= 2) body.ttl = ttl;
 			return body;
 		}
 		case 'initializeStorageDocument': {
 			const liveblocksTypeRaw = str(getParam, 'initializeStorageDocument_liveblocksType');
-			const liveblocksType =
-				liveblocksTypeRaw === 'LiveObject' ? ('LiveObject' as const) : undefined;
+			if (liveblocksTypeRaw !== 'LiveObject') {
+				throw new Error('liveblocksType must be LiveObject');
+			}
 			const data = parseJsonObject(getParam('initializeStorageDocument_data'), true);
-			if (liveblocksType === undefined && data === undefined) return undefined;
-			const body: Record<string, unknown> = {};
-			if (liveblocksType !== undefined) body.liveblocksType = liveblocksType;
-			if (data !== undefined) body.data = data;
-			return Object.keys(body).length ? body : undefined;
+			return {
+				liveblocksType: 'LiveObject' as const,
+				data: data ?? {},
+			};
 		}
 		case 'createThread': {
 			const commentUserId = str(getParam, 'createThread_commentUserId');
@@ -421,19 +431,24 @@ export function assembleBody(operation: string, bodyMode: BodyMode, getParam: Ge
 			if (commentBody === undefined || commentBody === null) {
 				throw new Error('Comment body JSON is required');
 			}
-			const body: Record<string, unknown> = {
-				comment: {
-					userId: commentUserId,
-					body: commentBody,
-				},
+			const comment: Record<string, unknown> = {
+				userId: commentUserId,
+				body: commentBody,
 			};
 			const createdAt = str(getParam, 'createThread_commentCreatedAt');
 			const commentMetadata = parseJsonObject(getParam('createThread_commentMetadata'), true);
+			const attachmentIdsRaw = str(getParam, 'createThread_commentAttachmentIds');
 			const threadMetadata = parseJsonObject(getParam('createThread_threadMetadata'), true);
-			if (createdAt !== undefined) (body.comment as Record<string, unknown>).createdAt = createdAt;
-			if (commentMetadata !== undefined) {
-				(body.comment as Record<string, unknown>).metadata = commentMetadata;
+			if (createdAt !== undefined) comment.createdAt = createdAt;
+			if (commentMetadata !== undefined) comment.metadata = commentMetadata;
+			if (attachmentIdsRaw !== undefined) {
+				try {
+					comment.attachmentIds = JSON.parse(attachmentIdsRaw) as string[];
+				} catch {
+					comment.attachmentIds = attachmentIdsRaw.split(',').map((s) => s.trim()).filter(Boolean);
+				}
 			}
+			const body: Record<string, unknown> = { comment };
 			if (threadMetadata !== undefined) body.metadata = threadMetadata;
 			return body;
 		}
@@ -605,8 +620,7 @@ export function assembleBody(operation: string, bodyMode: BodyMode, getParam: Ge
 			const kind = str(getParam, 'triggerInboxNotification_kind');
 			const subjectId = str(getParam, 'triggerInboxNotification_subjectId');
 			if (!userId || !kind || !subjectId) {
-				if (bodyMode === 'optionalJson') return undefined;
-				throw new Error('userId, kind, and subjectId are required when sending a body');
+				throw new Error('userId, kind, and subjectId are required');
 			}
 			const activityData = parseJsonObject(getParam('triggerInboxNotification_activityData'), false);
 			if (!activityData) throw new Error('activityData JSON is required');
@@ -620,7 +634,6 @@ export function assembleBody(operation: string, bodyMode: BodyMode, getParam: Ge
 		case 'createGroup': {
 			const id = str(getParam, 'createGroup_id');
 			if (!id) {
-				if (bodyMode === 'optionalJson') return undefined;
 				throw new Error('Group ID is required');
 			}
 			const body: Record<string, unknown> = { id };

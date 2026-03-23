@@ -773,12 +773,12 @@ export const updateRoomNotificationSettings = <ThrowOnError extends boolean = fa
  *
  * This endpoint triggers an inbox notification. Corresponds to [`liveblocks.triggerInboxNotification`](https://liveblocks.io/docs/api-reference/liveblocks-node#post-inbox-notifications-trigger).
  */
-export const triggerInboxNotification = <ThrowOnError extends boolean = false>(options?: Options<TriggerInboxNotificationData, ThrowOnError>) => (options?.client ?? client).post<TriggerInboxNotificationResponses, TriggerInboxNotificationErrors, ThrowOnError>({
+export const triggerInboxNotification = <ThrowOnError extends boolean = false>(options: Options<TriggerInboxNotificationData, ThrowOnError>) => (options.client ?? client).post<TriggerInboxNotificationResponses, TriggerInboxNotificationErrors, ThrowOnError>({
     url: '/inbox-notifications/trigger',
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
@@ -801,12 +801,12 @@ export const getGroups = <ThrowOnError extends boolean = false>(options?: Option
  *
  * This endpoint creates a new group. Corresponds to [`liveblocks.createGroup`](https://liveblocks.io/docs/api-reference/liveblocks-node#create-group).
  */
-export const createGroup = <ThrowOnError extends boolean = false>(options?: Options<CreateGroupData, ThrowOnError>) => (options?.client ?? client).post<CreateGroupResponses, CreateGroupErrors, ThrowOnError>({
+export const createGroup = <ThrowOnError extends boolean = false>(options: Options<CreateGroupData, ThrowOnError>) => (options.client ?? client).post<CreateGroupResponses, CreateGroupErrors, ThrowOnError>({
     url: '/groups',
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
