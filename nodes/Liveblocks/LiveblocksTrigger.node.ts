@@ -100,7 +100,10 @@ export class LiveblocksTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Liveblocks Trigger',
 		name: 'liveblocksTrigger',
-		icon: 'file:liveblocks-icon-black.svg',
+		icon: {
+			light: 'file:liveblocks.svg',
+			dark: 'file:liveblocks.dark.svg',
+		},
 		group: ['trigger'],
 		version: 1,
 		description: 'Receives webhook events from Liveblocks',

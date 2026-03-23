@@ -77,7 +77,10 @@ export class Liveblocks implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Liveblocks',
 		name: 'liveblocks',
-		icon: 'file:liveblocks-icon-black.svg',
+		icon: {
+			light: 'file:liveblocks.svg',
+			dark: 'file:liveblocks.dark.svg',
+		},
 		group: ['transform'],
 		version: [1],
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
