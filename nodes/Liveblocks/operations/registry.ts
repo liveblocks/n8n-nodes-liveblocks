@@ -32,16 +32,6 @@ export function operationsUsingPathKey(key: PathParamKey): string[] {
 	return LIVEBLOCKS_OPERATIONS.filter((d) => d.pathParams.includes(key)).map((d) => d.operation);
 }
 
-export function operationsWithQuery(): string[] {
-	return LIVEBLOCKS_OPERATIONS.filter((d) => d.supportsQuery).map((d) => d.operation);
-}
-
-export function operationsWithAnyJsonBody(): string[] {
-	return LIVEBLOCKS_OPERATIONS.filter((d) => d.bodyMode === 'json' || d.bodyMode === 'optionalJson').map(
-		(d) => d.operation,
-	);
-}
-
 export function operationsWithBinaryUpload(): string[] {
 	return LIVEBLOCKS_OPERATIONS.filter((d) => d.bodyMode === 'binaryUpload').map((d) => d.operation);
 }

@@ -106,3 +106,5 @@ regarding building community nodes:
 The Liveblocks-specific API code is generated using openapi-ts from an OpenAPI spec hosted in Liveblocks github repository.
 This client is output to the nodes/Liveblocks/client diredctory.
 When the OpenAPI spec is updated, the various options inside /nodes/Liveblocks/operations will also need to be updated.
+
+Structured request fields for the Liveblocks node are defined in `nodes/Liveblocks/operations/structuredFields.ts` (UI) and assembled in `nodes/Liveblocks/operations/requestAssembly.ts`. After regenerating `types.gen.ts` / `sdk.gen.ts`, diff the `*Data`, `*RequestBody`, and `query` types and update those two files when request shapes or descriptions change. Raw JSON body is only used for a few endpoints (for example JSON Patch and broadcast payloads).

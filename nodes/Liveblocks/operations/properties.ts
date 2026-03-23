@@ -6,10 +6,9 @@ import {
 	operationsUsingPathKey,
 	operationsWithBinaryDownload,
 	operationsWithBinaryUpload,
-	operationsWithAnyJsonBody,
-	operationsWithQuery,
 	operationsWithSplit,
 } from './registry';
+import { buildStructuredOperationProperties } from './structuredFields';
 import type { LiveblocksResource, PathParamKey } from './types';
 
 const RESOURCE_MENU: Array<{ name: string; value: LiveblocksResource; description: string }> = [
@@ -151,33 +150,9 @@ export function buildLiveblocksProperties(): INodeProperties[] {
 		properties.push(pathProperty(pk));
 	}
 
+	properties.push(...buildStructuredOperationProperties());
+
 	properties.push(
-		{
-			displayName: 'Query',
-			name: 'query',
-			type: 'json',
-			default: '{}',
-			description:
-				'Query parameters as JSON (e.g. pagination: {"limit":20,"startingAfter":"..."}). Omit unused keys.',
-			displayOptions: {
-				show: {
-					operation: operationsWithQuery(),
-				},
-			},
-		},
-		{
-			displayName: 'Body',
-			name: 'body',
-			type: 'json',
-			default: '{}',
-			description:
-				'JSON request body. For optional-body operations, use {} to omit the body. Required operations must include a valid JSON object.',
-			displayOptions: {
-				show: {
-					operation: operationsWithAnyJsonBody(),
-				},
-			},
-		},
 		{
 			displayName: 'Input Binary Field',
 			name: 'binaryPropertyName',

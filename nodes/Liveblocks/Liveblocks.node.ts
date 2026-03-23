@@ -6,26 +6,13 @@ import type {
 	INodeTypeDescription,
 	JsonObject,
 } from 'n8n-workflow';
-import {
-	ApplicationError,
-	NodeApiError,
-	NodeConnectionTypes,
-	NodeOperationError,
-} from 'n8n-workflow';
+import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import { OPERATION_MAP } from './operations/registry';
 import { buildLiveblocksProperties } from './operations/properties';
 import type { OperationDefinition } from './operations/types';
+import { assembleBody, assembleQuery, isEmptyObject } from './operations/requestAssembly';
 import { configureLiveblocksClient } from './transport/configureClient';
-
-function isEmptyObject(value: unknown): boolean {
-	return (
-		value !== null &&
-		typeof value === 'object' &&
-		!Array.isArray(value) &&
-		Object.keys(value as object).length === 0
-	);
-}
 
 function unwrapSdkResult(raw: unknown, spec: OperationDefinition): unknown {
 	if (spec.responseMode === 'binaryDownload') {
@@ -35,42 +22,6 @@ function unwrapSdkResult(raw: unknown, spec: OperationDefinition): unknown {
 		return (raw as { data: unknown }).data;
 	}
 	return raw;
-}
-
-function parseQueryInput(raw: unknown): Record<string, unknown> | undefined {
-	if (raw === undefined || raw === null) return undefined;
-	if (typeof raw === 'string') {
-		const t = raw.trim();
-		if (t === '' || t === '{}') return undefined;
-		const parsed: unknown = JSON.parse(t);
-		if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-			throw new ApplicationError('Query must be a JSON object');
-		}
-		return parsed as Record<string, unknown>;
-	}
-	if (typeof raw === 'object' && !Array.isArray(raw)) {
-		const q = raw as Record<string, unknown>;
-		return Object.keys(q).length ? q : undefined;
-	}
-	throw new ApplicationError('Query must be a JSON object');
-}
-
-function parseBodyInput(raw: unknown): Record<string, unknown> | undefined {
-	if (raw === undefined || raw === null) return undefined;
-	if (typeof raw === 'string') {
-		const t = raw.trim();
-		if (t === '' || t === '{}') return undefined;
-		const parsed: unknown = JSON.parse(t);
-		if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-			throw new ApplicationError('Body must be a JSON object');
-		}
-		return parsed as Record<string, unknown>;
-	}
-	if (typeof raw === 'object' && !Array.isArray(raw)) {
-		const b = raw as Record<string, unknown>;
-		return Object.keys(b).length ? b : undefined;
-	}
-	throw new ApplicationError('Body must be a JSON object');
 }
 
 export class Liveblocks implements INodeType {
@@ -139,45 +90,58 @@ export class Liveblocks implements INodeType {
 					path[key] = String(v).trim();
 				}
 
-				const queryRaw = spec.supportsQuery
-					? this.getNodeParameter('query', itemIndex, {})
-					: undefined;
+				const getParam = (name: string, defaultValue?: unknown) =>
+					this.getNodeParameter(name, itemIndex, defaultValue);
+
 				let query: Record<string, unknown> | undefined;
 				try {
-					query = spec.supportsQuery ? parseQueryInput(queryRaw) : undefined;
+					query = spec.supportsQuery ? assembleQuery(operation, getParam) : undefined;
 				} catch (e) {
 					throw new NodeOperationError(
 						this.getNode(),
-						e instanceof Error ? e.message : 'Invalid Query JSON',
+						e instanceof Error ? e.message : 'Invalid query parameters',
 						{ itemIndex },
 					);
 				}
 
-				const bodyRaw =
-					spec.bodyMode === 'json' || spec.bodyMode === 'optionalJson'
-						? this.getNodeParameter('body', itemIndex, {})
-						: undefined;
 				let body: unknown;
-				try {
-					const parsed = parseBodyInput(bodyRaw);
-					if (spec.bodyMode === 'json') {
-						if (parsed === undefined || isEmptyObject(parsed)) {
-							throw new NodeOperationError(
-								this.getNode(),
-								'Body is required for this operation — provide a JSON object',
-								{ itemIndex },
-							);
-						}
-						body = parsed;
-					} else if (spec.bodyMode === 'optionalJson') {
-						body = parsed === undefined || isEmptyObject(parsed) ? undefined : parsed;
+				if (spec.bodyMode === 'binaryUpload') {
+					body = undefined;
+				} else if (spec.bodyMode === 'none') {
+					body = undefined;
+				} else {
+					try {
+						body = assembleBody(operation, spec.bodyMode, getParam);
+					} catch (e) {
+						throw new NodeOperationError(
+							this.getNode(),
+							e instanceof Error ? e.message : 'Invalid request body',
+							{ itemIndex },
+						);
 					}
-				} catch (e) {
-					throw new NodeOperationError(
-						this.getNode(),
-						e instanceof Error ? e.message : 'Invalid Body JSON',
-						{ itemIndex },
-					);
+					if (spec.bodyMode === 'json') {
+						if (
+							body === undefined ||
+							body === null ||
+							(typeof body === 'object' &&
+								!Array.isArray(body) &&
+								isEmptyObject(body))
+						) {
+							throw new NodeOperationError(this.getNode(), 'Body is required for this operation', {
+								itemIndex,
+							});
+						}
+					}
+					if (spec.bodyMode === 'optionalJson') {
+						if (
+							body !== undefined &&
+							typeof body === 'object' &&
+							!Array.isArray(body) &&
+							isEmptyObject(body)
+						) {
+							body = undefined;
+						}
+					}
 				}
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -196,6 +160,10 @@ export class Liveblocks implements INodeType {
 					callOpts.body = new Blob([new Uint8Array(buf)]);
 				} else if (body !== undefined) {
 					callOpts.body = body;
+				}
+
+				if (operation === 'createWebKnowledgeSource' && callOpts.body && path.copilotId) {
+					(callOpts.body as { copilotId: string }).copilotId = path.copilotId;
 				}
 
 				if (spec.responseMode === 'binaryDownload') {
