@@ -44,6 +44,5 @@ export interface OperationDefinition {
 	responseMode: ResponseMode;
 	/** When set and the decoded JSON response has an array at this key, items can be split. */
 	splitArrayPath?: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	run: (options: any) => Promise<unknown>;
+	run: (options: Record<string, unknown>) => Promise<unknown>;
 }

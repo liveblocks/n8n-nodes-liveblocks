@@ -2,11 +2,10 @@ import * as sdk from '../client/sdk.gen';
 import type { OperationDefinition } from './types';
 
 /** SDK calls; `throwOnError` is set per operation in `Liveblocks.node.ts`. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const call =
-	<T extends (...args: any[]) => any>(fn: T) =>
+	(fn: unknown) =>
 	(opts: Record<string, unknown>) =>
-		fn(opts);
+		(fn as (options: Record<string, unknown>) => Promise<unknown>)(opts);
 
 export const LIVEBLOCKS_OPERATIONS: OperationDefinition[] = [
 	// --- Room ---
