@@ -733,11 +733,44 @@ export function buildStructuredOperationProperties(): INodeProperties[] {
 		},
 		{
 			displayName: 'Body',
+			name: 'createComment_bodyMode',
+			type: 'options',
+			options: [
+				{ name: 'JSON (CommentBody)', value: 'json' },
+				{ name: 'Plain Text (Single Paragraph)', value: 'plainText' },
+			],
+			default: 'json',
+			description:
+				'Use JSON for full CommentBody (mentions, formatting). Plain text wraps your input in one paragraph.',
+			...showOp('createComment'),
+		},
+		{
+			displayName: 'Body (JSON)',
 			name: 'createComment_body',
 			type: 'json',
 			default: '{}',
 			required: true,
-			...showOp('createComment'),
+			description: 'Full CommentBody: version + content blocks',
+			displayOptions: {
+				show: {
+					operation: ['createComment'],
+					createComment_bodyMode: ['json'],
+				},
+			},
+		},
+		{
+			displayName: 'Body (plain text)',
+			name: 'createComment_bodyText',
+			type: 'string',
+			typeOptions: { rows: 6 },
+			default: '',
+			description: 'Comment text; sent as one paragraph (version 1 CommentBody). May be empty.',
+			displayOptions: {
+				show: {
+					operation: ['createComment'],
+					createComment_bodyMode: ['plainText'],
+				},
+			},
 		},
 		{
 			displayName: 'Metadata',

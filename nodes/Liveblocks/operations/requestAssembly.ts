@@ -3,6 +3,8 @@
  * Shapes follow `nodes/Liveblocks/client/types.gen.ts`.
  */
 
+import { commentBodyFromPlainText } from '../utils/commentBodyEnrichment';
+
 import type { BodyMode } from './types';
 
 export const RAW_BODY_OPERATIONS = new Set<string>(['broadcastEvent', 'patchStorageDocument']);
@@ -485,9 +487,17 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 		case 'createComment': {
 			const userId = str(getParam, 'createComment_userId');
 			if (!userId) throw new Error('userId is required');
-			const bodyContent = parseJsonValue(getParam('createComment_body'));
-			if (bodyContent === undefined || bodyContent === null) {
-				throw new Error('Comment body JSON is required');
+			const bodyMode = str(getParam, 'createComment_bodyMode') ?? 'json';
+			let bodyContent: unknown;
+			if (bodyMode === 'plainText') {
+				const raw = getParam('createComment_bodyText', '');
+				const text = raw === undefined || raw === null ? '' : String(raw);
+				bodyContent = commentBodyFromPlainText(text);
+			} else {
+				bodyContent = parseJsonValue(getParam('createComment_body'));
+				if (bodyContent === undefined || bodyContent === null) {
+					throw new Error('Comment body JSON is required');
+				}
 			}
 			const body: Record<string, unknown> = { userId, body: bodyContent };
 			const createdAt = str(getParam, 'createComment_createdAt');

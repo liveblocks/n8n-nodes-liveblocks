@@ -37,6 +37,21 @@ export type CommentBody = {
 	content: Array<CommentBodyParagraph | Record<string, unknown>>;
 };
 
+/**
+ * Minimal CommentBody v1: one paragraph whose text node is the given string (mentions/links not supported).
+ */
+export function commentBodyFromPlainText(text: string): CommentBody {
+	return {
+		version: 1,
+		content: [
+			{
+				type: 'paragraph',
+				children: [{ text }],
+			},
+		],
+	};
+}
+
 // --- Type guards ---
 
 function isCommentBodyParagraph(element: unknown): element is CommentBodyParagraph {
