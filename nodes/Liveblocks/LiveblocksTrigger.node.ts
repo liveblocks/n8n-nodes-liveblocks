@@ -227,7 +227,7 @@ export class LiveblocksTrigger implements INodeType {
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('liveblocksWebhookSigningSecretApi');
-		const webhookSecret = credentials.secret as string;
+		const webhookSecret = credentials.webhookSigningSecret as string;
 
 		if (!webhookSecret) {
 			throw new NodeOperationError(
