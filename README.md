@@ -1,14 +1,6 @@
-# Liveblocks Official N8N Nodes
+# Liveblocks Official n8n Nodes
 
-This is the official Liveblocks N8N node repository. These nodes can
-
-- Download and modify room storage
-- Interact with threads, comments, and attachments
-- Send notifications
-- Set presence data to show your workflow status
-- Listen to Liveblocks webhook events such as commentCreated and storageModified
-
-[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
+This is the official Liveblocks [n8n](https://n8n.io/) node repository. These nodes cand ownload and modify room storage, interact with threads, comments, and attachments, send notifications and more in real-time.
 
 - [Installation](#installation)
 - [Operations](#operations)
