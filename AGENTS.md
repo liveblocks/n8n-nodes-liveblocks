@@ -1,7 +1,7 @@
-# n8n community node
+# n8n community liveblocks node
 
 ## Overview
-This is a project containing code for an n8n community node. n8n is a workflow
+This is a project containing code for an n8n community node for Liveblocks. n8n is a workflow
 automation platform where users build workflows with nodes, which are the
 building block of a workflow. Nodes can perform a range of actions, such as
 starting a workflow (called a "trigger node"), fetching and sending data, or
@@ -27,8 +27,6 @@ be approved
   (nodes, credentials, tests, etc.), not just fragments similar to examples.
 - If an example omits parts (e.g. types, operations, properties), **infer and
   implement the missing parts** based on the real requirements / API docs.
-- Never output `Wordpress`-specific code unless the project is actually about
-  WordPress.
 
 ## Project structure
 There are two main folders in this project:
@@ -39,27 +37,30 @@ There are two main folders in this project:
 So it looks something like this:
 .
 ├── nodes/
-│   └── Example/
-│       ├── Example.node.ts
-│       └── ...
+│   └── Liveblocks/
+│       ├── Liveblocks.node.ts
+│       └── LiveblocksTrigger.node.ts
 ├── credentials/
-│   └── Example.credentials.ts
+│   └── LiveblocksAPI.credentials.ts
+│   └── LiveblocksWebhookSignatureAPI.credentials.ts
 ├── package.json
 └── ...
 It's important to note that `package.json` has a special field `n8n` that have
 information about nodes and credentials in a package:
 ```json
 {
-  "name": "n8n-nodes-example",
+  "name": "n8n-nodes-liveblocks",
   "version": "1.0.0",
   "n8n": {
     "n8nNodesApiVersion": 1,
     "strict": true,
     "credentials": [
-        "dist/credentials/Example.credentials.js"
+        "dist/credentials/LiveblocksApi.credentials.js",
+        "dist/credentials/LiveblocksWebhookSignatureAPI.credentials.js",
     ],
     "nodes": [
-      "dist/nodes/Example/Example.node.js"
+      "dist/nodes/Liveblocks/Liveblocks.node.js",
+      "dist/nodes/Liveblocks/LiveblocksTrigger.node.js
     ]
   }
 }
@@ -100,3 +101,8 @@ regarding building community nodes:
 - https://docs.n8n.io/integrations/creating-nodes/overview/
 - https://docs.n8n.io/integrations/creating-nodes/build/reference/
 - https://docs.n8n.io/integrations/creating-nodes/build/reference/ux-guidelines/
+
+## Liveblocks Code Generation
+The Liveblocks-specific API code is generated using openapi-ts from an OpenAPI spec hosted in Liveblocks github repository.
+This client is output to the nodes/Liveblocks/client diredctory.
+When the OpenAPI spec is updated, the various options inside /nodes/Liveblocks/operations will also need to be updated.

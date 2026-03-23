@@ -10,9 +10,7 @@ export type LiveblocksResource =
 	| 'inbox'
 	| 'group'
 	| 'aiCopilot'
-	| 'aiKnowledge'
-	| 'managementProject'
-	| 'managementWebhook';
+	| 'aiKnowledge';
 
 /** Path keys sent to the generated SDK (`name` is sent as `name` in the URL). */
 export type PathParamKey =
@@ -23,8 +21,6 @@ export type PathParamKey =
 	| 'groupId'
 	| 'copilotId'
 	| 'knowledgeSourceId'
-	| 'projectId'
-	| 'webhookId'
 	| 'versionId'
 	| 'attachmentId'
 	| 'inboxNotificationId'

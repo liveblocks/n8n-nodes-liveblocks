@@ -18,8 +18,6 @@ const resourceOrder: LiveblocksResource[] = [
 	'group',
 	'aiCopilot',
 	'aiKnowledge',
-	'managementProject',
-	'managementWebhook',
 ];
 
 export const LIVEBLOCKS_RESOURCES: LiveblocksResource[] = resourceOrder.filter((r) =>

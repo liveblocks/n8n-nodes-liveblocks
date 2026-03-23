@@ -33,16 +33,6 @@ const RESOURCE_MENU: Array<{ name: string; value: LiveblocksResource; descriptio
 	{ name: 'Group', value: 'group', description: 'Groups and membership' },
 	{ name: 'AI Copilot', value: 'aiCopilot', description: 'AI copilots' },
 	{ name: 'AI Knowledge', value: 'aiKnowledge', description: 'Knowledge sources' },
-	{
-		name: 'Management — Projects',
-		value: 'managementProject',
-		description: 'Account management API — projects and keys',
-	},
-	{
-		name: 'Management — Webhooks',
-		value: 'managementWebhook',
-		description: 'Account management API — webhooks',
-	},
 ];
 
 const PATH_LABELS: Record<PathParamKey, { displayName: string; description: string }> = {
@@ -73,14 +63,6 @@ const PATH_LABELS: Record<PathParamKey, { displayName: string; description: stri
 	knowledgeSourceId: {
 		displayName: 'Knowledge Source ID',
 		description: 'Knowledge source identifier',
-	},
-	projectId: {
-		displayName: 'Project ID',
-		description: 'Management project ID',
-	},
-	webhookId: {
-		displayName: 'Webhook ID',
-		description: 'Webhook identifier',
 	},
 	versionId: {
 		displayName: 'Version ID',
@@ -160,8 +142,6 @@ export function buildLiveblocksProperties(): INodeProperties[] {
 		'groupId',
 		'copilotId',
 		'knowledgeSourceId',
-		'projectId',
-		'webhookId',
 		'versionId',
 		'attachmentId',
 		'inboxNotificationId',

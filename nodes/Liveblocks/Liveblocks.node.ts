@@ -81,7 +81,7 @@ export class Liveblocks implements INodeType {
 		group: ['transform'],
 		version: [1],
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Call the Liveblocks REST API (rooms, comments, Yjs, AI, management, and more)',
+		description: 'Call the Liveblocks REST API (rooms, comments, Yjs, AI, and more)',
 		defaults: {
 			name: 'Liveblocks',
 		},
