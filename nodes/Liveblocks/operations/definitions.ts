@@ -1,10 +1,9 @@
 import * as sdk from '../client/sdk.gen';
 import type { OperationDefinition } from './types';
 
-/** Wrap SDK calls with `throwOnError: true` for consistent errors + `NodeApiError`. */
+/** SDK calls; `throwOnError` is set per operation in `Liveblocks.node.ts`. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const call = <T extends (...args: any[]) => any>(fn: T) => (opts: Record<string, unknown>) =>
-	fn({ ...opts, throwOnError: true });
+const call = <T extends (...args: any[]) => any>(fn: T) => (opts: Record<string, unknown>) => fn(opts);
 
 export const LIVEBLOCKS_OPERATIONS: OperationDefinition[] = [
 	// --- Room ---

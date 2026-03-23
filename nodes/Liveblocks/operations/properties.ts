@@ -215,6 +215,14 @@ export function buildLiveblocksProperties(): INodeProperties[] {
 				},
 			},
 		},
+		{
+			displayName: 'Include Request in Error',
+			name: 'includeRequestInError',
+			type: 'boolean',
+			default: false,
+			description:
+				'Whether failed API calls should include the outgoing URL, method, redacted headers, body, and response body (truncated) in the error description for debugging',
+		},
 	);
 
 	return properties;

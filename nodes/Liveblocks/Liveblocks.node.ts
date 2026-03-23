@@ -13,6 +13,134 @@ import { buildLiveblocksProperties } from './operations/properties';
 import type { OperationDefinition } from './operations/types';
 import { assembleBody, assembleQuery, isEmptyObject } from './operations/requestAssembly';
 import { configureLiveblocksClient } from './transport/configureClient';
+import { enrichLiveblocksJson } from './utils/commentBodyEnrichment';
+
+/** Map SDK/HTTP failures to a JsonObject n8n's NodeApiError can display (status + message). */
+function liveblocksErrorToNodePayload(error: unknown, response?: Response): JsonObject {
+	const httpCode = response?.status !== undefined ? String(response.status) : undefined;
+
+	if (error && typeof error === 'object' && !Array.isArray(error)) {
+		const e = error as Record<string, unknown>;
+		if (Object.keys(e).length === 0) {
+			return {
+				message: httpCode ? `HTTP ${httpCode}` : 'Request failed',
+				...(httpCode ? { httpCode } : {}),
+			};
+		}
+		const msg =
+			typeof e.message === 'string' && e.message.trim()
+				? e.message
+				: typeof e.error === 'string'
+					? e.error
+					: httpCode
+						? `HTTP ${httpCode}`
+						: 'Request failed';
+		return { ...e, message: msg, ...(httpCode ? { httpCode } : {}) };
+	}
+
+	if (typeof error === 'string') {
+		const msg = error.trim() || (httpCode ? `HTTP ${httpCode}` : 'Request failed');
+		return { message: msg, ...(httpCode ? { httpCode } : {}) };
+	}
+
+	return {
+		message: httpCode ? `HTTP ${httpCode}` : 'Request failed',
+		...(httpCode ? { httpCode } : {}),
+	};
+}
+
+/** `instanceof Response` can fail across realms; duck-type for SDK envelopes. */
+function isResponseLike(obj: unknown): obj is Response {
+	return (
+		obj !== null &&
+		typeof obj === 'object' &&
+		typeof (obj as { status?: unknown }).status === 'number' &&
+		typeof (obj as { clone?: unknown }).clone === 'function'
+	);
+}
+
+function isRequestLike(obj: unknown): obj is Request {
+	return (
+		obj !== null &&
+		typeof obj === 'object' &&
+		typeof (obj as { url?: unknown }).url === 'string' &&
+		typeof (obj as { method?: unknown }).method === 'string' &&
+		typeof (obj as { headers?: unknown }).headers === 'object'
+	);
+}
+
+function redactHeaders(headers: Headers): Record<string, string> {
+	const out: Record<string, string> = {};
+	headers.forEach((value, key) => {
+		out[key] = key.toLowerCase() === 'authorization' ? '[redacted]' : value;
+	});
+	return out;
+}
+
+function serializeBodyForDebug(body: unknown): string | undefined {
+	if (body === undefined) return undefined;
+	if (body instanceof Blob) {
+		return `[binary blob, ${body.size} bytes]`;
+	}
+	if (typeof body === 'string') {
+		return body.length > 8000 ? `${body.slice(0, 8000)}…` : body;
+	}
+	try {
+		return JSON.stringify(body, null, 2);
+	} catch {
+		return String(body);
+	}
+}
+
+function formatPartialCallOptsDebug(opts: Record<string, unknown> | undefined): string | undefined {
+	if (!opts) return undefined;
+	const lines: string[] = [];
+	if (opts.path) lines.push(`path: ${JSON.stringify(opts.path)}`);
+	if (opts.query) lines.push(`query: ${JSON.stringify(opts.query)}`);
+	const bodyStr = serializeBodyForDebug(opts.body);
+	if (bodyStr !== undefined) lines.push(`body: ${bodyStr}`);
+	return lines.length ? lines.join('\n') : undefined;
+}
+
+async function buildLiveblocksRequestDebug(
+	envelope: { request: Request; response: Response },
+	callOpts: Record<string, unknown>,
+): Promise<string> {
+	const parts: string[] = [];
+	parts.push(`${envelope.request.method} ${envelope.request.url}`);
+	parts.push('Request headers:');
+	parts.push(JSON.stringify(redactHeaders(envelope.request.headers), null, 2));
+	const bodyStr = serializeBodyForDebug(callOpts.body);
+	if (bodyStr !== undefined) {
+		parts.push('Request body:');
+		parts.push(bodyStr);
+	}
+	try {
+		const text = await envelope.response.clone().text();
+		if (text) {
+			parts.push('Response body:');
+			parts.push(text.length > 8000 ? `${text.slice(0, 8000)}…` : text);
+		}
+	} catch {
+		/* ignore */
+	}
+	return parts.join('\n');
+}
+
+function isSdkFieldsErrorEnvelope(
+	raw: unknown,
+): raw is { error: unknown; request: Request; response: Response } {
+	if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return false;
+	const o = raw as Record<string, unknown>;
+	return (
+		'error' in o &&
+		o.error !== undefined &&
+		'response' in o &&
+		isResponseLike(o.response) &&
+		'request' in o &&
+		isRequestLike(o.request)
+	);
+}
 
 function unwrapSdkResult(raw: unknown, spec: OperationDefinition): unknown {
 	if (spec.responseMode === 'binaryDownload') {
@@ -63,6 +191,7 @@ export class Liveblocks implements INodeType {
 		configureLiveblocksClient(secretKey);
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+			let lastCallOpts: Record<string, unknown> | undefined;
 			try {
 				const resource = this.getNodeParameter('resource', itemIndex) as string;
 				const operation = this.getNodeParameter('operation', itemIndex) as string;
@@ -146,7 +275,9 @@ export class Liveblocks implements INodeType {
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const callOpts: any = {
-					throwOnError: true,
+					// Binary download uses responseStyle "data"; with throwOnError false the client returns
+					// undefined on error instead of { error, response }, so we keep throwing for those ops.
+					throwOnError: spec.responseMode === 'binaryDownload',
 				};
 				if (Object.keys(path).length > 0) {
 					callOpts.path = path;
@@ -171,8 +302,34 @@ export class Liveblocks implements INodeType {
 					callOpts.responseStyle = 'data';
 				}
 
+				const includeRequestInError = this.getNodeParameter(
+					'includeRequestInError',
+					itemIndex,
+					false,
+				) as boolean;
+
+				lastCallOpts = callOpts;
+
 				const rawResult = await spec.run(callOpts);
+
+				if (spec.responseMode !== 'binaryDownload' && isSdkFieldsErrorEnvelope(rawResult)) {
+					let errorDescription: string | undefined;
+					if (includeRequestInError) {
+						errorDescription = await buildLiveblocksRequestDebug(rawResult, callOpts);
+					}
+					throw new NodeApiError(
+						this.getNode(),
+						liveblocksErrorToNodePayload(rawResult.error, rawResult.response),
+						{
+							itemIndex,
+							httpCode: String(rawResult.response.status),
+							description: errorDescription,
+						},
+					);
+				}
+
 				const unwrapped = unwrapSdkResult(rawResult, spec);
+				const jsonPayload = enrichLiveblocksJson(operation, unwrapped);
 
 				if (spec.responseMode === 'binaryDownload') {
 					const ab = unwrapped as ArrayBuffer;
@@ -222,11 +379,11 @@ export class Liveblocks implements INodeType {
 				if (
 					splitIntoItems &&
 					splitKey &&
-					unwrapped &&
-					typeof unwrapped === 'object' &&
-					!Array.isArray(unwrapped)
+					jsonPayload &&
+					typeof jsonPayload === 'object' &&
+					!Array.isArray(jsonPayload)
 				) {
-					const row = unwrapped as Record<string, unknown>;
+					const row = jsonPayload as Record<string, unknown>;
 					const arr = row[splitKey];
 					const nextCursor = row.nextCursor;
 					if (Array.isArray(arr)) {
@@ -255,9 +412,9 @@ export class Liveblocks implements INodeType {
 				}
 
 				const outJson: IDataObject =
-					unwrapped !== null && typeof unwrapped === 'object'
-						? (JSON.parse(JSON.stringify(unwrapped)) as IDataObject)
-						: { value: unwrapped as never };
+					jsonPayload !== null && typeof jsonPayload === 'object'
+						? (JSON.parse(JSON.stringify(jsonPayload)) as IDataObject)
+						: { value: jsonPayload as never };
 				returnData.push({
 					json: outJson,
 					pairedItem: { item: itemIndex },
@@ -270,13 +427,24 @@ export class Liveblocks implements INodeType {
 					});
 					continue;
 				}
-				if (error instanceof NodeOperationError) {
+				if (error instanceof NodeOperationError || error instanceof NodeApiError) {
 					if (error.context && typeof error.context === 'object') {
 						(error.context as Record<string, unknown>).itemIndex = itemIndex;
 					}
 					throw error;
 				}
-				throw new NodeApiError(this.getNode(), error as unknown as JsonObject, { itemIndex });
+				const includeRequestInError = this.getNodeParameter(
+					'includeRequestInError',
+					itemIndex,
+					false,
+				) as boolean;
+				const partialDebug = includeRequestInError
+					? formatPartialCallOptsDebug(lastCallOpts)
+					: undefined;
+				throw new NodeApiError(this.getNode(), liveblocksErrorToNodePayload(error), {
+					itemIndex,
+					...(partialDebug ? { description: partialDebug } : {}),
+				});
 			}
 		}
 
