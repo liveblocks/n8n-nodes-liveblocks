@@ -90,8 +90,4 @@ New to n8n? See [Try it out](https://docs.n8n.io/try-it-out/) in the n8n docs.
 
 ## Version history
 
-| Version | Notes |
-| --- | --- |
-| **0.1.0** | Initial published release: **Liveblocks** action node (REST API operations) and **Liveblocks Trigger** (signed webhooks). |
-
-Future releases will be noted here and in the repository changelog when present.
+See [CHANGELOG.md](CHANGELOG.md) for a complete changelog.
