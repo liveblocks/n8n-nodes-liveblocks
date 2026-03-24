@@ -299,7 +299,7 @@
     },
     {
       "parameters": {
-        "content": "Tell the AI presence to expire in 2 seconds",
+        "content": "Tell the AI presence to expire in 2 seconds.",
         "height": 80,
         "width": 214
       },

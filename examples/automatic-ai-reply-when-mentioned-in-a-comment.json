@@ -1,0 +1,440 @@
+{
+  "name": "Automatic AI reply when mentioned in a comment",
+  "nodes": [
+    {
+      "parameters": {
+        "events": [
+          "commentCreated"
+        ],
+        "additionalFields": {}
+      },
+      "type": "CUSTOM.liveblocksTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "55c5a866-a618-4fdb-9d66-d898217f6003",
+      "name": "Liveblocks Trigger",
+      "webhookId": "9cc66974-aaaf-4720-b557-1267105ca78b",
+      "credentials": {
+        "liveblocksWebhookSigningSecretApi": {
+          "id": "49QSVYMe8ZioziMa",
+          "name": "Liveblocks Webhook Signing Secret account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComment",
+        "roomId": "={{ $json.event.data.roomId }}",
+        "threadId": "={{ $json.event.data.threadId }}",
+        "commentId": "={{ $json.event.data.commentId }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "1a0c859b-7ea5-4198-a861-83f6df0afbaf",
+      "name": "Get a comment",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3a4b15ca-e141-4096-8081-bbe359f59733",
+              "leftValue": "={{ $json.mentionedUserIds }}",
+              "rightValue": "__AI_AGENT",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        0
+      ],
+      "id": "73646402-4f8b-4817-af91-4b88242c9cef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "getThread",
+        "roomId": "={{ $json.roomId }}",
+        "threadId": "={{ $json.threadId }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        592,
+        -112
+      ],
+      "id": "e53009ce-0aa9-4630-a728-49c6f6755c2e",
+      "name": "Get a thread",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI assistant that can reply to comments in a thread. You have been mentioned in the latest comment and must reply.\n\nHere is the entire thread:\n\n```\n{{ JSON.stringify($json.comments, null, 2) }}\n```\n\nYou were mentioned in the last comment. Write your reply as a string.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        -112
+      ],
+      "id": "50982aa6-8fc1-4f33-bb9a-e1b8860dc462",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        64
+      ],
+      "id": "9d18bb25-fa44-4238-807e-0b1685883d09",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TLoCIyCNiIGbje8U",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "roomId": "={{ $('Get a comment').item.json.roomId }}",
+        "threadId": "={{ $('Get a comment').item.json.threadId }}",
+        "createComment_userId": "__AI_AGENT",
+        "createComment_bodyMode": "plainText",
+        "createComment_bodyText": "={{ $json.output }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        -112
+      ],
+      "id": "7d6ea1ce-ecd4-4a1c-8490-a5915c95d4d6",
+      "name": "Create a comment",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "When a comment is created in a room.",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -112
+      ],
+      "id": "a8a0d9c6-96d2-41f1-a22f-aef62d31f15b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Check if the comment mentions the AI agent. Their ID is `\"__AI_AGENT\"` in this demo.",
+        "height": 80,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -112
+      ],
+      "id": "134df2ab-daab-46b2-bc3d-4ccb79e2a626",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "If `false`, do nothing. AI is not meant to reply.",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        528,
+        112
+      ],
+      "id": "2010ef4a-922f-4213-b406-cf55e9fc1344",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "If `true`, fetch the entire comment thread, pass it to AI so it understands the full context, and ask it to write up a response.",
+        "height": 80,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        592,
+        -224
+      ],
+      "id": "d414863b-9cf3-4e28-9888-a4ea6553dd67",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "The response is then added as a comment in the same thread. The user ID is set to `\"__AI_AGENT\"`.",
+        "height": 80,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        -224
+      ],
+      "id": "bf1158a8-32ae-47ad-9802-afcba9752877",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Automatic AI reply when mentioned in a comment\n \nThis example uses [Liveblocks Comments](https://liveblocks.io/comments), collaborative commenting components for React. When an AI assistant is mentioned in a thread  (e.g. \"@AI Assistant\"), it will automatically leave a response.\n\nUsing [webhooks](https://liveblocks.io/docs/platform/webhooks), this workflow is triggered when a comment is created in a thread. If the agent's ID (`\"__AI_AGENT\"`) was mentioned, an AI agent is given the entire thread context, and asked to create a response. This response is then added, and users will see it appear in their apps in real time.\n",
+        "height": 352,
+        "width": 326
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -352
+      ],
+      "id": "016a250a-59d2-4cf0-9847-803b08bc9af6",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "### Set up\nThis workflow requires a Comments app installed and webhooks set up in the Liveblocks dashboard. You can try it with a demo application:\n\n1. Download the [Next.js comments example](https://liveblocks.io/examples/comments/nextjs-comments), and run it with a secret key.\n2. Find `database.ts` inside the example and uncomment the AI assistant user.\n3. Insert the secret key from the project into n8n nodes: \"Get a comment\", \"Get a thread\", \"Create a comment\".\n4. Go to the [Liveblocks dashboard](https://liveblocks.io/dashboard), open your project and go to \"Webhooks\". Create a new webhook in your project using a placeholder URL, and selecting \"commentCreated\" events.\n5. Copy your webhook secret from this page and paste it into the \"Liveblocks Trigger\" node.\n6. Expose the webhook URL from the trigger, for example with `localtunnel` or `ngrok`. Copy the production URL from the \"Liveblocks Trigger\" and replace `localhost:5678` with the new URL.\n6. Your workflow is now set up! Tag @AI Assistant in the application to trigger it.\n",
+        "height": 576,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        16
+      ],
+      "id": "5c0688a9-6a38-408e-b2d7-788907f6e1c1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n```\nnpx localtunnel --port 5678\n```\nThis creates a URL like:\n```\nhttps://honest-months-fix.loca.lt\n```\nThe URL you need for the dashboard looks like this:\n```\nhttps://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook\n```",
+        "height": 304,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        288
+      ],
+      "id": "09f27b2c-0b75-48fd-8a8c-f81ca2e18919",
+      "name": "Sticky Note7"
+    }
+  ],
+  "pinData": {
+    "Get a comment": [
+      {
+        "json": {
+          "type": "comment",
+          "threadId": "th_B3kEgFjNOXAO9MV0xjpax",
+          "roomId": "liveblocks:examples:nextjs-comments",
+          "id": "cm_Mp-z9SKTHnHURB5IqHozH",
+          "userId": "quinn-elton@example.com",
+          "createdAt": "2026-03-24T12:07:31.048Z",
+          "reactions": [],
+          "attachments": [],
+          "metadata": {},
+          "body": {
+            "version": 1,
+            "content": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "what do you prefer "
+                  },
+                  {
+                    "type": "mention",
+                    "id": "__AI_AGENT",
+                    "kind": "user"
+                  },
+                  {
+                    "text": "?"
+                  }
+                ]
+              }
+            ]
+          },
+          "mentionedUserIds": [
+            "__AI_AGENT"
+          ],
+          "bodyPlain": "what do you prefer @__AI_AGENT?",
+          "bodyHtml": "<p>what do you prefer <span data-mention>@__AI_AGENT</span>?</p>",
+          "bodyMarkdown": "what do you prefer @\\_\\_AI\\_AGENT?"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Liveblocks Trigger": [
+      {
+        "json": {
+          "event": {
+            "data": {
+              "commentId": "cm_R2zso81zUshMVmyac1fL6",
+              "createdAt": "2026-03-24T11:55:18.580Z",
+              "createdBy": "user-2",
+              "projectId": "69c16cfcfebcafb68e5158b5",
+              "roomId": "liveblocks:examples:nextjs-comments",
+              "threadId": "th_BarBv3xTxgQU-Sn1sxsbn"
+            },
+            "type": "commentCreated"
+          },
+          "eventType": "commentCreated",
+          "timestamp": "2026-03-24T11:55:19.503Z"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Liveblocks Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a comment": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get a thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a thread": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "20e70083-ad99-4266-8e30-d78bd3fff028",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
+  },
+  "id": "1_j9-Bxn13fiv-hp8cAeG",
+  "tags": []
+}
