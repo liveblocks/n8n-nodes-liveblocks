@@ -12,26 +12,26 @@ import { buildStructuredOperationProperties } from './structuredFields';
 import type { LiveblocksResource, PathParamKey } from './types';
 
 const RESOURCE_MENU: Array<{ name: string; value: LiveblocksResource; description: string }> = [
+	{ name: 'AI Copilot', value: 'aiCopilot', description: 'AI copilots' },
+	{ name: 'AI Knowledge', value: 'aiKnowledge', description: 'Knowledge sources' },
+	{ name: 'Attachment', value: 'attachment', description: 'Attachment metadata and URLs' },
+	{ name: 'Auth', value: 'auth', description: 'Access tokens and ID tokens' },
+	{ name: 'Comment', value: 'comment', description: 'Comments and reactions' },
+	{ name: 'Group', value: 'group', description: 'Groups and membership' },
+	{ name: 'Inbox', value: 'inbox', description: 'Trigger and system inbox actions' },
 	{
 		name: 'Room',
 		value: 'room',
 		description: 'Rooms, presence, and broadcast',
 	},
 	{ name: 'Storage', value: 'storage', description: 'Liveblocks Storage document' },
-	{ name: 'Yjs', value: 'yjs', description: 'Yjs documents and versions' },
 	{ name: 'Thread', value: 'thread', description: 'Comment threads' },
-	{ name: 'Comment', value: 'comment', description: 'Comments and reactions' },
-	{ name: 'Attachment', value: 'attachment', description: 'Attachment metadata and URLs' },
-	{ name: 'Auth', value: 'auth', description: 'Access tokens and ID tokens' },
 	{
 		name: 'User',
 		value: 'user',
 		description: 'Inbox notifications, settings, and subscriptions',
 	},
-	{ name: 'Inbox', value: 'inbox', description: 'Trigger and system inbox actions' },
-	{ name: 'Group', value: 'group', description: 'Groups and membership' },
-	{ name: 'AI Copilot', value: 'aiCopilot', description: 'AI copilots' },
-	{ name: 'AI Knowledge', value: 'aiKnowledge', description: 'Knowledge sources' },
+	{ name: 'Yjs', value: 'yjs', description: 'Yjs documents and versions' },
 ];
 
 const PATH_LABELS: Record<PathParamKey, { displayName: string; description: string }> = {

@@ -12,7 +12,7 @@ import { OPERATION_MAP } from './operations/registry';
 import { buildLiveblocksProperties } from './operations/properties';
 import type { OperationDefinition } from './operations/types';
 import { assembleBody, assembleQuery, isEmptyObject } from './operations/requestAssembly';
-import { configureLiveblocksClient } from './transport/configureClient';
+import { createLiveblocksHttpClient } from './transport/configureClient';
 import { enrichLiveblocksJson } from './utils/commentBodyEnrichment';
 
 /** Map SDK/HTTP failures to a JsonObject n8n's NodeApiError can display (status + message). */
@@ -183,12 +183,8 @@ export class Liveblocks implements INodeType {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 
-		const credentials = await this.getCredentials('liveblocksApi');
-		const secretKey = credentials.secretKey as string;
-		if (!secretKey) {
-			throw new NodeOperationError(this.getNode(), 'Liveblocks secret key is required');
-		}
-		configureLiveblocksClient(secretKey);
+		await this.getCredentials('liveblocksApi');
+		const liveblocksClient = createLiveblocksHttpClient(this);
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			let lastCallOpts: Record<string, unknown> | undefined;
@@ -306,6 +302,7 @@ export class Liveblocks implements INodeType {
 					false,
 				) as boolean;
 
+				callOpts.client = liveblocksClient;
 				lastCallOpts = callOpts;
 
 				const rawResult = await spec.run(callOpts);

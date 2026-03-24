@@ -1,10 +1,25 @@
-import type { ICredentialType, INodeProperties, ICredentialTestRequest } from 'n8n-workflow';
+import type {
+	ICredentialType,
+	ICredentialTestRequest,
+	IAuthenticateGeneric,
+	INodeProperties,
+} from 'n8n-workflow';
 
 export class LiveblocksApi implements ICredentialType {
 	name = 'liveblocksApi';
 	displayName = 'Liveblocks API';
 	documentationUrl = 'https://liveblocks.io/docs/api-reference/rest-api-endpoints';
 	icon = 'file:liveblocks.svg' as const;
+
+	authenticate: IAuthenticateGeneric = {
+		type: 'generic',
+		properties: {
+			headers: {
+				Authorization: '=Bearer {{$credentials.secretKey}}',
+			},
+		},
+	};
+
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Secret Key',
