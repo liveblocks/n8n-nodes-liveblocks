@@ -584,7 +584,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=You're responding to a comment left by a users. There are some file attachments, here are there values:\n\n```\n{{ JSON.stringify($json.result, null, 2) }}\n```\n\nRespond to the users prompt using the file analysis data: {{ $json.content }}",
+        "text": "=Respond to the users message: {{ $('Get a comment').item.json.bodyPlain }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -678,50 +678,6 @@
           },
           "eventType": "commentCreated",
           "timestamp": "2026-03-24T14:27:15.814Z"
-        }
-      }
-    ],
-    "Code in JavaScript1": [
-      {
-        "json": {
-          "result": [
-            {
-              "json": {
-                "content": [
-                  {
-                    "type": "text",
-                    "text": "## Bupa Healthcare Practitioner's Questionnaire (PERS/7194/MAR26)\n\nThis is a **Bupa insurance medical assessment form** used to determine whether a patient's treatment is covered under their Bupa health insurance policy or trust scheme. Here's a summary of its contents:\n\n---\n\n### **Purpose**\nTo confirm whether a patient's treatment is covered, particularly checking if the condition pre-existed the start of their Bupa cover.\n\n---\n\n### **Sections Overview**\n\n| Section | Completed By | Content |\n|---------|-------------|---------|\n| 1 | Patient | Personal details (name, address, DOB, contact info, membership number) |\n| 2 | Patient | Third party involvement (accidents, clinical negligence, other insurance) |\n| 3 | Patient | Details of condition, symptoms, and treatment history with dates |\n| 4 | Patient | Healthcare practitioner's contact details |\n| 5 | Patient | Medical reports consent and patient rights (under Access to Medical Reports Act 1988) |\n| 6 | Healthcare Practitioner | Medical details, treatment plan, symptom history |\n| 7 | Healthcare Practitioner | Fee payment details (Bupa contributes **up to £50 inc. VAT**) |\n\n---\n\n### **Also Includes**\n- **Privacy Notice** explaining data usage, rights, and GDPR compliance\n- **Contact details** for submitting the completed form\n- Accessibility options (Braille, large print, audio, Relay UK)"
-                  }
-                ]
-              },
-              "pairedItem": {
-                "item": 0
-              }
-            },
-            {
-              "json": {
-                "content": [
-                  {
-                    "type": "text",
-                    "text": "## Image Description\n\nThis is a **stunning 3D digital artwork** depicting a **miniature Zen garden** floating in space on a **glowing, translucent platform**.\n\n### Key Elements:\n\n**🌿 The Garden:**\n- Carefully **raked sand** with flowing circular patterns\n- **Bonsai trees** (one large, one small) with twisted trunks\n- **Moss-covered rocks** and stone arrangements\n- Small **green shrubs** and bamboo-like plants\n- Traditional **gravel borders**\n\n**💡 The Platform:**\n- A **luminescent, crystalline/acrylic base** with blue LED-style lighting\n- **Japanese/Chinese characters** on the side panel\n- Futuristic, tech-inspired design\n\n**🪧 The Sign:**\n- A **wooden sign** reading **\"ZEN ROUTER\"** in golden text\n- Additional smaller text beneath (possibly Japanese/Chinese characters)\n\n**🌌 The Setting:**\n- Floating against a **dark, cosmic/misty background**\n- Atmospheric **blue fog/nebula** surrounding it\n\n### Overall Concept:\nThis appears to be **concept art or a logo** for something called **\"Zen Router\"** — likely a **software project, networking tool, or tech product** that combines the tranquility of Zen philosophy with technology/routing concepts."
-                  }
-                ]
-              },
-              "pairedItem": {
-                "item": 1
-              }
-            },
-            {
-              "json": {
-                "mimeType": "application/zip",
-                "name": "favicon-for-public.zip",
-                "message": "Cannot analyze files of this type"
-              },
-              "pairedItem": {
-                "item": 2
-              }
-            }
-          ]
         }
       }
     ]
@@ -930,7 +886,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "68cb9669-cc5d-4beb-b253-908f920f89bd",
+  "versionId": "2c6b38ce-9537-4d39-8679-8713dac33b0b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
