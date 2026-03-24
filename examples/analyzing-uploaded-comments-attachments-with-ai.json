@@ -403,7 +403,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=You're responding to a comment left by a users. There are some file attachments, here are there values:\n\n```\n{{ JSON.stringify($json.result, null, 2) }}\n```\n\nRespond to the users prompt using the file analysis data: {{ $json.content }}",
+        "text": "=You're responding to a comment left by a users. There are some file attachments attached to the comment. You've just done an analysis of the images, this is your analysis:\n\n```\n{{ JSON.stringify($json.result, null, 2) }}\n```\n\nRespond to the users prompt using the file analysis reply. This is what the user asked you:\n\n\"\"\"\n{{ $('Get a comment').item.json.bodyPlain }}\n''''",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -886,7 +886,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "2c6b38ce-9537-4d39-8679-8713dac33b0b",
+  "versionId": "59b769c9-502c-4a85-86e4-9b965d10e8b9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
