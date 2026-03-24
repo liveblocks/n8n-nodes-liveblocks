@@ -1,0 +1,940 @@
+{
+  "name": "Analyzing uploaded comments attachments with AI",
+  "nodes": [
+    {
+      "parameters": {
+        "events": [
+          "commentCreated"
+        ],
+        "additionalFields": {}
+      },
+      "type": "CUSTOM.liveblocksTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "ebf2043f-c524-4f1f-a112-bcc3ca70ce2e",
+      "name": "Liveblocks Trigger",
+      "webhookId": "f31e9a4a-684c-4ca5-bc5e-be87a83efb98",
+      "credentials": {
+        "liveblocksWebhookSigningSecretApi": {
+          "id": "49QSVYMe8ZioziMa",
+          "name": "Liveblocks Webhook Signing Secret account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComment",
+        "roomId": "={{ $json.event.data.roomId }}",
+        "threadId": "={{ $json.event.data.threadId }}",
+        "commentId": "={{ $json.event.data.commentId }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "9204a3e9-87a9-43bb-80cf-0cda40e8ebc0",
+      "name": "Get a comment",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "93da4049-4fd2-4b5b-8126-a9c0c86e376e",
+              "leftValue": "={{ $json.mentionedUserIds }}",
+              "rightValue": "__AI_AGENT",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        0
+      ],
+      "id": "40d19409-c683-49cd-8ae9-8bef1eac988b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "When a comment is created in a room.",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -112
+      ],
+      "id": "ba245bc1-35ed-4873-817c-dcc9f86c2ba4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Check if a comment mentions the AI agent. Their ID is `\"__AI_AGENT\"` in this demo.",
+        "height": 80,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -112
+      ],
+      "id": "40e4f97f-4c97-4a24-8a87-2e2b933fed8e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "If AI is not mentioned, do nothing.",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        448,
+        128
+      ],
+      "id": "c89965f4-970c-4315-9f9c-07c7c4aecfd9",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "If there are attachments, loop through every attachment and fetch its URL.",
+        "height": 80,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -224
+      ],
+      "id": "f3124ad9-f874-49f0-9e7f-62fd0f6eea0c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "The response is then added as a comment in the same thread. The user ID is set to `\"__AI_AGENT\"`.",
+        "height": 80,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2544,
+        -224
+      ],
+      "id": "44ad1915-f785-40b5-a289-d99bc163a50a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Analyzing uploaded comments attachments with AI\n \nThis example uses [Liveblocks Comments](https://liveblocks.io/comments), collaborative commenting components for React. When an AI assistant is mentioned in a thread  (e.g. \"@AI Assistant\"), it will automatically leave a response. Additionally, it will analyze any PDf or image attachments in the comments, and use them to help it respond.\n\nUsing [webhooks](https://liveblocks.io/docs/platform/webhooks), this workflow is triggered when a comment is created in a thread. If the agent's ID (`\"__AI_AGENT\"`) it will create a response. If a PDF or image file is uploaded, these will be analyzed by Anthropic and used as context. This response is then added, and users will see it appear in their apps in real time.\n",
+        "height": 448,
+        "width": 326
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -448
+      ],
+      "id": "fcebab59-f7a8-407a-b963-0e0c400d7cd0",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "### Set up\nThis workflow requires a Comments app installed and webhooks set up in the Liveblocks dashboard. You can try it with a demo application:\n\n1. Download the [Next.js comments example](https://liveblocks.io/examples/comments/nextjs-comments), and run it with a secret key.\n2. Find `database.ts` inside the example and uncomment the AI assistant user.\n3. Insert the secret key from the project into n8n nodes: \"Get a comment\", \"Get a thread\", \"Create a comment\".\n4. Go to the [Liveblocks dashboard](https://liveblocks.io/dashboard), open your project and go to \"Webhooks\". Create a new webhook in your project using a placeholder URL, and selecting \"commentCreated\" events.\n5. Copy your webhook secret from this page and paste it into the \"Liveblocks Trigger\" node.\n6. Expose the webhook URL from the trigger, for example with `localtunnel` or `ngrok`. Copy the production URL from the \"Liveblocks Trigger\" and replace `localhost:5678` with the new URL.\n6. Your workflow is now set up! Tag @AI Assistant in the application and add attachments to trigger it.\n",
+        "height": 592,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        16
+      ],
+      "id": "aa9d70de-fce9-40be-a8ac-2caac1d64f7f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n```\nnpx localtunnel --port 5678 --subdomain your-name-here\n```\nThis creates a URL like:\n```\nhttps://honest-months-fix.loca.lt\n```\nThe URL you need for the dashboard looks like this:\n```\nhttps://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook\n```",
+        "height": 304,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        288
+      ],
+      "id": "45d4b445-1291-4912-bba0-7f37148f008b",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.first().json.attachments.map((item) => ({ id: item.id }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        -112
+      ],
+      "id": "51bf57e0-fb1f-4dab-8f20-ee2dafe4683a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "attachment",
+        "roomId": "={{ $('Get a comment').item.json.roomId }}",
+        "attachmentId": "={{ $json.id }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -112
+      ],
+      "id": "292b839a-a63b-4965-9177-b17382434760",
+      "name": "Get attachment1",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "documentUrls": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -128
+      ],
+      "id": "57affdfc-dbf7-455e-a089-55085186541d",
+      "name": "Analyze document1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TLoCIyCNiIGbje8U",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4de5fd1b-488d-48e6-be52-e60470484186"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9f419375-66a9-402d-82a2-fe61f82c2af0",
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "image/",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -112
+      ],
+      "id": "799b8b8d-9829-4d82-a447-e44d8ace841e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "imageUrls": "={{ $('Get attachment1').item.json.url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        48
+      ],
+      "id": "861b0731-4a5d-486b-befa-fc4cfb151525",
+      "name": "Analyze image",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TLoCIyCNiIGbje8U",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        -112
+      ],
+      "id": "d4779db5-6db4-4373-8380-e85a14cb0365",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d56dee2e-0089-42d4-b657-fb7657dc1074",
+              "name": "mimeType",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            },
+            {
+              "id": "7cdec271-69f5-4146-909d-fe49799fe164",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "82b7ff0e-4bc7-43f2-bb6c-91075b016ab8",
+              "name": "message",
+              "value": "Cannot analyze files of this type",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        224
+      ],
+      "id": "b6d0ea12-82ab-4e3f-8bfc-d39ef99c6882",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're responding to a comment left by a users. There are some file attachments, here are there values:\n\n```\n{{ JSON.stringify($json.result, null, 2) }}\n```\n\nRespond to the users prompt using the file analysis data: {{ $json.content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2208,
+        -112
+      ],
+      "id": "0544e919-f532-4bb9-b2a9-32e498faf93a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        2208,
+        80
+      ],
+      "id": "6229e5ba-5754-4a4a-8fd6-9d0e6d78e829",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TLoCIyCNiIGbje8U",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return { result: $input.all() };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        -112
+      ],
+      "id": "0d14b116-f71e-46c0-9663-f4d3434fd65e",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "roomId": "={{ $('Get a comment').first().json.roomId }}",
+        "threadId": "={{ $('Get a comment').first().json.threadId }}",
+        "createComment_userId": "__AI_AGENT",
+        "createComment_bodyMode": "plainText",
+        "createComment_bodyText": "={{ $json.output }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        2544,
+        -112
+      ],
+      "id": "60dc9f02-8f1f-4d97-8876-45c39ed2214c",
+      "name": "Create a comment1",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "If Anthropic can analyze the attachment (i.e. it's PDF or image), feed it through an analyzer. Otherwise, say you can't analyze the file type.",
+        "height": 80,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        -224
+      ],
+      "id": "b65aff57-08a0-48fe-9b44-4540a28c867c",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Merge the analyses back into a single list",
+        "height": 80,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        -224
+      ],
+      "id": "f39b4b1a-6c91-49e4-ae1d-e0903333ae7a",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Ask AI to write a response to the original comment, with its analysis context",
+        "height": 80,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        -224
+      ],
+      "id": "cc55ab1d-0121-4dac-940c-6540d6daf0dd",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3a4b15ca-e141-4096-8081-bbe359f59733",
+              "leftValue": "={{ $json.attachments }}",
+              "rightValue": "__AI_AGENT",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "93da4049-4fd2-4b5b-8126-a9c0c86e376e",
+              "leftValue": "={{ $json.mentionedUserIds }}",
+              "rightValue": "__AI_AGENT",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        -48
+      ],
+      "id": "59b3ffe4-4e79-4984-86b3-2e137b3a3192",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "content": "If AI was mentioned check if the comment has an attachment.",
+        "height": 80,
+        "width": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -176
+      ],
+      "id": "b8c33eec-04dc-40b5-846d-ea761b8ff70e",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're responding to a comment left by a users. There are some file attachments, here are there values:\n\n```\n{{ JSON.stringify($json.result, null, 2) }}\n```\n\nRespond to the users prompt using the file analysis data: {{ $json.content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        240
+      ],
+      "id": "89a79d5b-a318-4097-b846-b20bda0e2938",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        432
+      ],
+      "id": "6de37a66-cdab-4611-aa19-1ab05e4a0d6d",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TLoCIyCNiIGbje8U",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "roomId": "={{ $('Get a comment').first().json.roomId }}",
+        "threadId": "={{ $('Get a comment').first().json.threadId }}",
+        "createComment_userId": "__AI_AGENT",
+        "createComment_bodyMode": "plainText",
+        "createComment_bodyText": "={{ $json.output }}"
+      },
+      "type": "CUSTOM.liveblocks",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        240
+      ],
+      "id": "2db5795e-9526-464a-aedb-12e272f5f074",
+      "name": "Create a comment",
+      "credentials": {
+        "liveblocksApi": {
+          "id": "aSBO1Lf4YrGYH0Qq",
+          "name": "Liveblocks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "If there are no attachments, AI generates a response to the comment, and it's added to the thread. The user ID is set to `\"__AI_AGENT\"`.",
+        "height": 80,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        832,
+        128
+      ],
+      "id": "fa2f17d3-deae-4e25-bd0a-5a9abcc1e2ca",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {
+    "Liveblocks Trigger": [
+      {
+        "json": {
+          "event": {
+            "data": {
+              "commentId": "cm_kCQwD_auh8xihgyOyR9mj",
+              "createdAt": "2026-03-24T14:27:14.151Z",
+              "createdBy": "quinn.elton@example.com",
+              "projectId": "69c16cfcfebcafb68e5158b5",
+              "roomId": "liveblocks:examples:nextjs-comments",
+              "threadId": "th__pSLvJYkp8sASh9uofGM6"
+            },
+            "type": "commentCreated"
+          },
+          "eventType": "commentCreated",
+          "timestamp": "2026-03-24T14:27:15.814Z"
+        }
+      }
+    ],
+    "Code in JavaScript1": [
+      {
+        "json": {
+          "result": [
+            {
+              "json": {
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "## Bupa Healthcare Practitioner's Questionnaire (PERS/7194/MAR26)\n\nThis is a **Bupa insurance medical assessment form** used to determine whether a patient's treatment is covered under their Bupa health insurance policy or trust scheme. Here's a summary of its contents:\n\n---\n\n### **Purpose**\nTo confirm whether a patient's treatment is covered, particularly checking if the condition pre-existed the start of their Bupa cover.\n\n---\n\n### **Sections Overview**\n\n| Section | Completed By | Content |\n|---------|-------------|---------|\n| 1 | Patient | Personal details (name, address, DOB, contact info, membership number) |\n| 2 | Patient | Third party involvement (accidents, clinical negligence, other insurance) |\n| 3 | Patient | Details of condition, symptoms, and treatment history with dates |\n| 4 | Patient | Healthcare practitioner's contact details |\n| 5 | Patient | Medical reports consent and patient rights (under Access to Medical Reports Act 1988) |\n| 6 | Healthcare Practitioner | Medical details, treatment plan, symptom history |\n| 7 | Healthcare Practitioner | Fee payment details (Bupa contributes **up to £50 inc. VAT**) |\n\n---\n\n### **Also Includes**\n- **Privacy Notice** explaining data usage, rights, and GDPR compliance\n- **Contact details** for submitting the completed form\n- Accessibility options (Braille, large print, audio, Relay UK)"
+                  }
+                ]
+              },
+              "pairedItem": {
+                "item": 0
+              }
+            },
+            {
+              "json": {
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "## Image Description\n\nThis is a **stunning 3D digital artwork** depicting a **miniature Zen garden** floating in space on a **glowing, translucent platform**.\n\n### Key Elements:\n\n**🌿 The Garden:**\n- Carefully **raked sand** with flowing circular patterns\n- **Bonsai trees** (one large, one small) with twisted trunks\n- **Moss-covered rocks** and stone arrangements\n- Small **green shrubs** and bamboo-like plants\n- Traditional **gravel borders**\n\n**💡 The Platform:**\n- A **luminescent, crystalline/acrylic base** with blue LED-style lighting\n- **Japanese/Chinese characters** on the side panel\n- Futuristic, tech-inspired design\n\n**🪧 The Sign:**\n- A **wooden sign** reading **\"ZEN ROUTER\"** in golden text\n- Additional smaller text beneath (possibly Japanese/Chinese characters)\n\n**🌌 The Setting:**\n- Floating against a **dark, cosmic/misty background**\n- Atmospheric **blue fog/nebula** surrounding it\n\n### Overall Concept:\nThis appears to be **concept art or a logo** for something called **\"Zen Router\"** — likely a **software project, networking tool, or tech product** that combines the tranquility of Zen philosophy with technology/routing concepts."
+                  }
+                ]
+              },
+              "pairedItem": {
+                "item": 1
+              }
+            },
+            {
+              "json": {
+                "mimeType": "application/zip",
+                "name": "favicon-for-public.zip",
+                "message": "Cannot analyze files of this type"
+              },
+              "pairedItem": {
+                "item": 2
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Liveblocks Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a comment": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get attachment1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get attachment1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Analyze document1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze document1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a comment1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Create a comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "68cb9669-cc5d-4beb-b253-908f920f89bd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
+  },
+  "id": "rarpWe7vgiY8AHmp",
+  "tags": []
+}

@@ -274,9 +274,9 @@
     },
     {
       "parameters": {
-        "content": "\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n```\nnpx localtunnel --port 5678\n```\nThis creates a URL like:\n```\nhttps://honest-months-fix.loca.lt\n```\nThe URL you need for the dashboard looks like this:\n```\nhttps://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook\n```",
+        "content": "\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n```\nnpx localtunnel --port 5678 --subdomain your-name-here\n```\nThis creates a URL like:\n```\nhttps://honest-months-fix.loca.lt\n```\nThe URL you need for the dashboard looks like this:\n```\nhttps://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook\n```",
         "height": 304,
-        "width": 544
+        "width": 576
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -430,7 +430,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "20e70083-ad99-4266-8e30-d78bd3fff028",
+  "versionId": "e5e29623-a321-488f-a9a0-13e7deaed35f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
