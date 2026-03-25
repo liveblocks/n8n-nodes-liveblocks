@@ -1,22 +1,35 @@
-# Liveblocks Official n8n Nodes
+<p align="center">
+  <a href="https://liveblocks.io#gh-light-mode-only">
+    <img src="https://raw.githubusercontent.com/liveblocks/liveblocks/main/.github/assets/header-light.svg" alt="Liveblocks" />
+  </a>
+  <a href="https://liveblocks.io#gh-dark-mode-only">
+    <img src="https://raw.githubusercontent.com/liveblocks/liveblocks/main/.github/assets/header-dark.svg" alt="Liveblocks" />
+  </a>
+</p>
 
-This is the official Liveblocks [n8n](https://n8n.io/) node repository. These nodes cand ownload and modify room storage, interact with threads, comments, and attachments, send notifications and more in real-time.
+# Liveblocks n8n nodes
 
-- [Installation](#installation)
+Official Liveblocks [n8n](https://n8n.io/) node repository. Use these nodes to download and modify room storage, interact with threads, comments, and attachments, send notifications and more in realtime.
+
+## Install
+
+Install this package as a [community node](https://docs.n8n.io/integrations/community-nodes/installation/) in your n8n instance.
+
+1. Open n8n and go to **Settings** → **Community nodes**.
+2. Select **Install** and enter `n8n-nodes-liveblocks` as the npm package name.
+3. Check **☑︎ I understand…** and click **Install**.
+
+_Liveblocks_ and _Liveblocks Trigger_ will now appear in the node palette.
+
+## More information
+
 - [Operations](#operations)
 - [Credentials](#credentials)
 - [Compatibility](#compatibility)
 - [Usage](#usage)
+- [Local development](#local-development)
 - [Resources](#resources)
 - [Version history](#version-history)
-
-## Installation
-
-Install this package as a [community node](https://docs.n8n.io/integrations/community-nodes/installation/) in your n8n instance. The npm package name is **`n8n-nodes-liveblocks`**.
-
-In n8n, open **Settings → Community nodes**, enter `n8n-nodes-liveblocks`, and install. After installation, **Liveblocks** and **Liveblocks Trigger** appear in the node palette.
-
-For local development of this repository, clone the project and use the [n8n node CLI](https://docs.n8n.io/integrations/creating-nodes/build/n8n-node-cli/) (`n8n-node dev`, `n8n-node build`) as described in the project’s contributor docs.
 
 ## Operations
 
@@ -87,6 +100,10 @@ New to n8n? See [Try it out](https://docs.n8n.io/try-it-out/) in the n8n docs.
 - [Liveblocks REST API reference](https://liveblocks.io/docs/api-reference/rest-api-endpoints)
 - [Liveblocks webhooks](https://liveblocks.io/docs/platform/webhooks)
 - [Liveblocks dashboard](https://liveblocks.io/dashboard)
+
+## Local development
+
+For local development of this repository, clone the project and use the [n8n node CLI](https://docs.n8n.io/integrations/creating-nodes/build/n8n-node-cli/) (`n8n-node dev`, `n8n-node build`) as described in the project’s contributor docs.
 
 ## Version history
 
