@@ -11,7 +11,6 @@
 
 <p>
   <a href="https://npmjs.org/package/n8n-nodes-liveblocks"><img src="https://img.shields.io/npm/v/n8n-nodes-liveblocks?style=flat&label=npm&color=c33" alt="NPM" /></a>
-  <a href="https://bundlephobia.com/package/n8n-nodes-liveblocks"><img src="https://img.shields.io/bundlephobia/minzip/n8n-nodes-liveblocks?style=flat&label=size&color=09f" alt="Size" /></a>
   <a href="https://github.com/liveblocks/n8n-nodes-liveblocks/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License" /></a>
 </p>
 
