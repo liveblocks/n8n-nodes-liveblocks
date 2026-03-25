@@ -9,6 +9,12 @@
 
 # Liveblocks n8n nodes
 
+<p>
+  <a href="https://npmjs.org/package/n8n-nodes-liveblocks"><img src="https://img.shields.io/npm/v/n8n-nodes-liveblocks?style=flat&label=npm&color=c33" alt="NPM" /></a>
+  <a href="https://bundlephobia.com/package/n8n-nodes-liveblocks"><img src="https://img.shields.io/bundlephobia/minzip/n8n-nodes-liveblocks?style=flat&label=size&color=09f" alt="Size" /></a>
+  <a href="https://github.com/liveblocks/n8n-nodes-liveblocks/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License" /></a>
+</p>
+
 Official Liveblocks [n8n](https://n8n.io/) node repository. Use these nodes to download and modify room storage, interact with threads, comments, and attachments, send notifications and more in realtime.
 
 ## Install
