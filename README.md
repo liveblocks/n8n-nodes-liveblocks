@@ -21,16 +21,6 @@ Install this package as a [community node](https://docs.n8n.io/integrations/comm
 
 _Liveblocks_ and _Liveblocks Trigger_ will now appear in the node palette.
 
-## More information
-
-- [Operations](#operations)
-- [Credentials](#credentials)
-- [Compatibility](#compatibility)
-- [Usage](#usage)
-- [Local development](#local-development)
-- [Resources](#resources)
-- [Version history](#version-history)
-
 ## Operations
 
 The package provides two nodes.
