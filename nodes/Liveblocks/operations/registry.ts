@@ -5,19 +5,20 @@ export const OPERATION_MAP: Map<string, OperationDefinition> = new Map(
 	LIVEBLOCKS_OPERATIONS.map((d) => [d.operation, d]),
 );
 
+/** Matches alphabetical order of RESOURCE_MENU in properties.ts */
 const resourceOrder: LiveblocksResource[] = [
-	'room',
-	'storage',
-	'yjs',
-	'thread',
-	'comment',
-	'attachment',
-	'auth',
-	'user',
-	'inbox',
-	'group',
 	'aiCopilot',
 	'aiKnowledge',
+	'attachment',
+	'auth',
+	'comment',
+	'group',
+	'inbox',
+	'room',
+	'storage',
+	'thread',
+	'user',
+	'yjs',
 ];
 
 export const LIVEBLOCKS_RESOURCES: LiveblocksResource[] = resourceOrder.filter((r) =>

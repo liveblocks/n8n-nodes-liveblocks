@@ -104,8 +104,7 @@ export class LiveblocksTrigger implements INodeType {
 		group: ['trigger'],
 		version: 1,
 		description: 'Receives webhook events from Liveblocks',
-		subtitle:
-			'={{(() => { const events = $parameter["events"] ?? []; const actionLabels = { created: "create", deleted: "delete", updated: "update", sent: "send", opened: "open", clicked: "click", bounced: "bounce", complained: "complain", delivered: "deliver", delivery_delayed: "delay", failed: "fail", received: "receive", scheduled: "schedule", suppressed: "suppress" }; return events.map((event) => { const [resource, action] = event.split("."); if (!resource || !action) { return event; } const actionLabel = actionLabels[action] ?? action.replace(/_/g, " "); return actionLabel + ": " + resource; }).join(", "); })() }}',
+		subtitle: '={{ ($parameter.events ?? []).join(", ") }}',
 		defaults: {
 			name: 'Liveblocks Trigger',
 		},
@@ -286,7 +285,7 @@ export class LiveblocksTrigger implements INodeType {
 			// Return empty response if event type doesn't match filter
 			return {
 				webhookResponse: { status: 200, body: { message: 'Event type filtered' } },
-				workflowData: [],
+				workflowData: [[]],
 			};
 		}
 
@@ -318,4 +317,5 @@ export class LiveblocksTrigger implements INodeType {
 			workflowData,
 		};
 	}
+
 }

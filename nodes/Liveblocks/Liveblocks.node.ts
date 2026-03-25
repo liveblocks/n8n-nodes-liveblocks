@@ -345,7 +345,7 @@ export class Liveblocks implements INodeType {
 						itemIndex,
 						'application/octet-stream',
 					) as string;
-					const binary = await this.helpers.prepareBinaryData(buffer, mime, fileName);
+					const binary = await this.helpers.prepareBinaryData(buffer, fileName, mime);
 					returnData.push({
 						json: { fileName, mimeType: mime, fileSize: buffer.length },
 						binary: { [prop]: binary },
