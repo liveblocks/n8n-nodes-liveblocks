@@ -518,32 +518,6 @@ export const LIVEBLOCKS_OPERATIONS: OperationDefinition[] = [
 		run: call(sdk.getAttachment),
 	},
 
-	// --- Auth ---
-	{
-		resource: 'auth',
-		operation: 'authorizeUser',
-		name: 'Authorize User (Access Token)',
-		description: 'Issue an access token',
-		action: 'Authorize user',
-		pathParams: [],
-		supportsQuery: false,
-		bodyMode: 'json',
-		responseMode: 'json',
-		run: call(sdk.authorizeUser),
-	},
-	{
-		resource: 'auth',
-		operation: 'identifyUser',
-		name: 'Identify User (ID Token)',
-		description: 'Issue an ID token',
-		action: 'Identify user',
-		pathParams: [],
-		supportsQuery: false,
-		bodyMode: 'json',
-		responseMode: 'json',
-		run: call(sdk.identifyUser),
-	},
-
 	// --- User ---
 	{
 		resource: 'user',

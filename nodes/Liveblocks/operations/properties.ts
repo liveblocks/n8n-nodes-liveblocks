@@ -15,7 +15,6 @@ const RESOURCE_MENU: Array<{ name: string; value: LiveblocksResource; descriptio
 	{ name: 'AI Copilot', value: 'aiCopilot', description: 'AI copilots' },
 	{ name: 'AI Knowledge', value: 'aiKnowledge', description: 'Knowledge sources' },
 	{ name: 'Attachment', value: 'attachment', description: 'Attachment metadata and URLs' },
-	{ name: 'Auth', value: 'auth', description: 'Access tokens and ID tokens' },
 	{ name: 'Comment', value: 'comment', description: 'Comments and reactions' },
 	{ name: 'Group', value: 'group', description: 'Groups and membership' },
 	{ name: 'Inbox', value: 'inbox', description: 'Trigger and system inbox actions' },

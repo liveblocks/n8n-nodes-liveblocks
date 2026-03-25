@@ -155,27 +155,6 @@ function extractFixedCollectionEntries(raw: unknown): Array<Record<string, unkno
 	return [];
 }
 
-function mergeDeep(
-	target: Record<string, unknown>,
-	source: Record<string, unknown>,
-): Record<string, unknown> {
-	for (const [k, v] of Object.entries(source)) {
-		if (
-			v &&
-			typeof v === 'object' &&
-			!Array.isArray(v) &&
-			target[k] &&
-			typeof target[k] === 'object' &&
-			!Array.isArray(target[k])
-		) {
-			mergeDeep(target[k] as Record<string, unknown>, v as Record<string, unknown>);
-		} else {
-			target[k] = v;
-		}
-	}
-	return target;
-}
-
 export function assembleQuery(
 	operation: string,
 	getParam: GetParam,
@@ -571,41 +550,6 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 			const body: Record<string, unknown> = { userId, metadata };
 			const updatedAt = str(getParam, 'editCommentMetadata_updatedAt');
 			if (updatedAt !== undefined) body.updatedAt = updatedAt;
-			return body;
-		}
-		case 'authorizeUser': {
-			const userId = str(getParam, 'authorizeUser_userId');
-			if (!userId) throw new Error('userId is required');
-			const permissions = parseJsonObject(getParam('authorizeUser_permissions'), false);
-			if (!permissions) throw new Error('permissions JSON object is required');
-			const body: Record<string, unknown> = { userId, permissions };
-			const organizationId = str(getParam, 'authorizeUser_organizationId');
-			const userInfo = parseJsonObject(getParam('authorizeUser_userInfo'), true);
-			if (organizationId !== undefined) body.organizationId = organizationId;
-			if (userInfo !== undefined) body.userInfo = userInfo;
-			const extra = parseJsonObject(getParam('authorizeUser_extra'), true);
-			if (extra && Object.keys(extra).length) mergeDeep(body, extra);
-			return body;
-		}
-		case 'identifyUser': {
-			const userId = str(getParam, 'identifyUser_userId');
-			if (!userId) throw new Error('userId is required');
-			const body: Record<string, unknown> = { userId };
-			const organizationId = str(getParam, 'identifyUser_organizationId');
-			const groupIdsRaw = str(getParam, 'identifyUser_groupIds');
-			const userInfo = parseJsonObject(getParam('identifyUser_userInfo'), true);
-			if (organizationId !== undefined) body.organizationId = organizationId;
-			if (groupIdsRaw !== undefined) {
-				try {
-					body.groupIds = JSON.parse(groupIdsRaw) as string[];
-				} catch {
-					body.groupIds = groupIdsRaw
-						.split(',')
-						.map((s) => s.trim())
-						.filter(Boolean);
-				}
-			}
-			if (userInfo !== undefined) body.userInfo = userInfo;
 			return body;
 		}
 		case 'updateNotificationSettings': {

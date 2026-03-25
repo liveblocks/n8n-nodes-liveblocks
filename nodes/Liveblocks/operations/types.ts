@@ -5,7 +5,6 @@ export type LiveblocksResource =
 	| 'thread'
 	| 'comment'
 	| 'attachment'
-	| 'auth'
 	| 'user'
 	| 'inbox'
 	| 'group'
