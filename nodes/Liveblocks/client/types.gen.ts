@@ -5,196 +5,841 @@ export type ClientOptions = {
 };
 
 /**
- * Room
+ * GetUserGroupsResponse
  */
-export type Room = {
-    id: string;
-    type: 'room';
-    /**
-     * The organization ID associated with this room.
-     */
-    organizationId: string;
-    lastConnectionAt?: string;
-    createdAt: string;
-    defaultAccesses: RoomPermission;
-    usersAccesses: RoomAccesses;
-    groupsAccesses: RoomAccesses;
-    metadata: RoomMetadata;
-};
-
-/**
- * RoomMetadata
- */
-export type RoomMetadata = {
-    [key: string]: string | Array<string>;
-};
-
-export type RoomPermission = Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'>;
-
-export type RoomAccesses = {
-    [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'>;
-};
-
-/**
- * GetRoomsResponse
- */
-export type GetRoomsResponse = {
+export type GetUserGroupsResponse = {
+    data: Array<Group>;
     nextCursor: string | null;
-    data: Array<Room>;
 };
 
 /**
- * CreateRoomRequestBody
+ * GroupMember
  */
-export type CreateRoomRequestBody = {
+export type GroupMember = {
     id: string;
-    /**
-     * The organization ID to associate with the room. Defaults to "default" if not provided.
-     */
+    addedAt: string;
+};
+
+/**
+ * Group
+ */
+export type Group = {
+    type: 'group';
+    id: string;
+    organizationId: string;
+    createdAt: string;
+    updatedAt: string;
+    scopes: {
+        mention?: true;
+    };
+    members: Array<GroupMember>;
+};
+
+/**
+ * GetGroupsResponse
+ */
+export type GetGroupsResponse = {
+    data: Array<Group>;
+    nextCursor: string | null;
+};
+
+/**
+ * RemoveGroupMembersRequestBody
+ */
+export type RemoveGroupMembersRequestBody = {
+    memberIds: Array<string>;
+};
+
+/**
+ * AddGroupMembersRequestBody
+ */
+export type AddGroupMembersRequestBody = {
+    memberIds: Array<string>;
+};
+
+/**
+ * CreateGroupRequestBody
+ */
+export type CreateGroupRequestBody = {
+    id: string;
+    memberIds?: Array<string>;
     organizationId?: string;
-    defaultAccesses: RoomPermission;
-    usersAccesses?: RoomAccesses;
-    groupsAccesses?: RoomAccesses;
-    metadata?: RoomMetadata;
-    /**
-     * Preferred storage engine version to use when creating new rooms. The v2 Storage engine supports larger documents, is more performant, has native streaming support, and will become the default in the future.
-     */
-    engine?: 1 | 2;
-};
-
-/**
- * UpdateRoomRequestBody
- */
-export type UpdateRoomRequestBody = {
-    defaultAccesses?: RoomPermission | null;
-    /**
-     * A map of user identifiers to permissions list. Setting the value as `null` will clear all users’ accesses. Setting one user identifier as `null` will clear this user’s accesses.
-     */
-    usersAccesses?: {
-        [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'> | null;
-    };
-    /**
-     * A map of group identifiers to permissions list. Setting the value as `null` will clear all groups’ accesses. Setting one group identifier as `null` will clear this group’s accesses.
-     */
-    groupsAccesses?: {
-        [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'> | null;
-    };
-    metadata?: {
-        [key: string]: string | Array<string> | null;
+    scopes?: {
+        mention?: true;
     };
 };
 
 /**
- * UpsertRoomRequestBody
+ * GetWebKnowledgeSourceLinksResponse
  */
-export type UpsertRoomRequestBody = {
-    update: UpdateRoomRequestBody;
-    /**
-     * Fields to use when creating the room if it does not exist. Unlike the create-room endpoint, `id` is not included here because it is provided in the URL path.
-     */
-    create?: {
-        /**
-         * The organization ID to associate with the room. Defaults to "default" if not provided.
-         */
-        organizationId?: string;
-        defaultAccesses: RoomPermission;
-        usersAccesses?: RoomAccesses;
-        groupsAccesses?: RoomAccesses;
-        metadata?: RoomMetadata;
+export type GetWebKnowledgeSourceLinksResponse = {
+    nextCursor: string | null;
+    data: Array<WebKnowledgeSourceLink>;
+};
+
+/**
+ * WebKnowledgeSourceLink
+ */
+export type WebKnowledgeSourceLink = {
+    id: string;
+    url: string;
+    status: 'ingesting' | 'ready' | 'error';
+    createdAt: string;
+    lastIndexedAt: string;
+};
+
+/**
+ * GetFileKnowledgeSourceMarkdownResponse
+ */
+export type GetFileKnowledgeSourceMarkdownResponse = {
+    id: string;
+    content: string;
+};
+
+/**
+ * CreateWebKnowledgeSourceResponse
+ */
+export type CreateWebKnowledgeSourceResponse = {
+    id: string;
+};
+
+/**
+ * CreateWebKnowledgeSourceRequestBody
+ */
+export type CreateWebKnowledgeSourceRequestBody = {
+    copilotId: string;
+    url: string;
+    type: 'individual_link' | 'crawl' | 'sitemap';
+};
+
+/**
+ * GetKnowledgeSourcesResponse
+ */
+export type GetKnowledgeSourcesResponse = {
+    nextCursor: string | null;
+    data: Array<KnowledgeSource>;
+};
+
+export type KnowledgeSourceFileSource = KnowledgeSourceBase & {
+    type: 'ai-knowledge-file-source';
+    file: {
+        name: string;
+        mimeType: string;
+    };
+};
+
+export type KnowledgeSourceBase = {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    lastIndexedAt: string;
+    status: 'ingesting' | 'ready' | 'error';
+    errorMessage?: string;
+};
+
+export type KnowledgeSourceWebSource = KnowledgeSourceBase & {
+    type: 'ai-knowledge-web-source';
+    link: {
+        url: string;
+        type: 'individual_link' | 'crawl' | 'sitemap';
     };
 };
 
 /**
- * UpdateRoomIdRequestBody
+ * KnowledgeSource
  */
-export type UpdateRoomIdRequestBody = {
-    /**
-     * The new room ID
-     */
-    newRoomId: string;
+export type KnowledgeSource = ({
+    type: 'KnowledgeSourceWebSource';
+} & KnowledgeSourceWebSource) | ({
+    type: 'KnowledgeSourceFileSource';
+} & KnowledgeSourceFileSource);
+
+/**
+ * GetAiCopilotsResponse
+ */
+export type GetAiCopilotsResponse = {
+    nextCursor: string | null;
+    data: Array<AiCopilot>;
 };
 
 /**
- * UpdateRoomOrganizationIdRequestBody
+ * AiCopilotOpenAiCompatible
  */
-export type UpdateRoomOrganizationIdRequestBody = {
-    /**
-     * The current organization ID of the room. Must match the room's current organization ID.
-     */
-    fromOrganizationId: string;
-    /**
-     * The new organization ID to assign to the room.
-     */
-    toOrganizationId: string;
+export type AiCopilotOpenAiCompatible = AiCopilotBase & {
+    provider: 'openai-compatible';
+    providerModel: string;
+    compatibleProviderName: string;
+    providerBaseUrl: string;
 };
 
 /**
- * ActiveUsersResponse
+ * AiCopilotProviderSettings
  */
-export type ActiveUsersResponse = {
-    data: Array<{
-        type: 'user';
-        id: string | null;
-        info: {
-            [key: string]: unknown;
+export type AiCopilotProviderSettings = {
+    maxTokens?: number;
+    temperature?: number;
+    topP?: number;
+    topK?: number;
+    frequencyPenalty?: number;
+    presencePenalty?: number;
+    stopSequences?: Array<string>;
+    seed?: number;
+    maxRetries?: number;
+};
+
+export type AiCopilotBase = {
+    type: 'copilot';
+    id: string;
+    name: string;
+    description?: string;
+    systemPrompt: string;
+    knowledgePrompt?: string;
+    alwaysUseKnowledge: boolean;
+    createdAt: string;
+    updatedAt: string;
+    lastUsedAt?: string;
+    settings?: AiCopilotProviderSettings;
+};
+
+/**
+ * GoogleProviderOptions
+ */
+export type GoogleProviderOptions = {
+    google: {
+        thinkingConfig?: {
+            thinkingBudget?: number;
         };
-        connectionId: number;
+    };
+};
+
+/**
+ * GoogleModel
+ */
+export type GoogleModel = 'gemini-2.5-flash' | 'gemini-2.5-pro' | 'gemini-2.0-flash-001' | 'gemini-1.5-flash' | 'gemini-1.5-pro';
+
+/**
+ * AiCopilotGoogle
+ */
+export type AiCopilotGoogle = AiCopilotBase & {
+    provider: 'google';
+    providerModel: GoogleModel;
+    providerOptions?: GoogleProviderOptions;
+};
+
+export type AnthropicProviderOptions = {
+    anthropic: {
+        thinking?: {
+            type: 'enabled';
+            budgetTokens: number;
+        } | {
+            type: 'disabled';
+        };
+        /**
+         * AnthropicWebSearch
+         */
+        webSearch?: {
+            allowedDomains?: Array<string>;
+        };
+    };
+};
+
+/**
+ * AnthropicModel
+ */
+export type AnthropicModel = 'claude-sonnet-4-5-20250929' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-1-20250805' | 'claude-4-opus-20250514' | 'claude-4-sonnet-20250514' | 'claude-3-7-sonnet-20250219' | 'claude-3-5-sonnet-latest' | 'claude-3-5-haiku-latest' | 'claude-3-opus-latest';
+
+/**
+ * AiCopilotAnthropic
+ */
+export type AiCopilotAnthropic = AiCopilotBase & {
+    provider: 'anthropic';
+    providerModel: AnthropicModel;
+    providerOptions?: AnthropicProviderOptions;
+};
+
+/**
+ * OpenAiModel
+ */
+export type OpenAiModel = 'o1' | 'o1-mini' | 'o3' | 'o3-mini' | 'o4-mini' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4o' | 'gpt-4o-mini' | 'gpt-4-turbo' | 'gpt-4' | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-chat-latest' | 'gpt-5.1' | 'gpt-5.1-mini' | 'gpt-5.1-chat-latest';
+
+/**
+ * AiCopilotOpenAi
+ */
+export type AiCopilotOpenAi = AiCopilotBase & {
+    provider: 'openai';
+    providerModel: OpenAiModel;
+};
+
+/**
+ * AiCopilot
+ */
+export type AiCopilot = ({
+    provider: 'openai';
+} & AiCopilotOpenAi) | ({
+    provider: 'anthropic';
+} & AiCopilotAnthropic) | ({
+    provider: 'google';
+} & AiCopilotGoogle) | ({
+    provider: 'openai-compatible';
+} & AiCopilotOpenAiCompatible);
+
+export type OpenAiProviderOptions = {
+    openai: {
+        reasoningEffort?: 'low' | 'medium' | 'high';
+        webSearch?: {
+            allowedDomains?: Array<string>;
+        };
+    };
+};
+
+/**
+ * UpdateAiCopilotRequestBody
+ */
+export type UpdateAiCopilotRequestBody = {
+    name?: string;
+    description?: string | null;
+    systemPrompt?: string;
+    knowledgePrompt?: string | null;
+    alwaysUseKnowledge?: boolean;
+    settings?: AiCopilotProviderSettings | null;
+    providerApiKey?: string;
+    provider?: 'openai' | 'anthropic' | 'google' | 'openai-compatible';
+    providerModel?: string;
+    providerOptions?: OpenAiProviderOptions | AnthropicProviderOptions | GoogleProviderOptions | null;
+    compatibleProviderName?: string;
+    providerBaseUrl?: string;
+};
+
+export type CreateAiCopilotRequestBody = ({
+    provider: 'openai';
+} & CreateAiCopilotOptionsOpenAi) | ({
+    provider: 'anthropic';
+} & CreateAiCopilotOptionsAnthropic) | ({
+    provider: 'google';
+} & CreateAiCopilotOptionsGoogle) | ({
+    provider: 'openai-compatible';
+} & CreateAiCopilotOptionsOpenAiCompatible);
+
+export type CreateAiCopilotOptionsOpenAiCompatible = CreateAiCopilotOptionsBase & {
+    provider: 'openai-compatible';
+    providerModel: string;
+    compatibleProviderName: string;
+    providerBaseUrl: string;
+};
+
+export type CreateAiCopilotOptionsBase = {
+    name: string;
+    description?: string;
+    systemPrompt: string;
+    knowledgePrompt?: string;
+    alwaysUseKnowledge?: boolean;
+    settings?: AiCopilotProviderSettings;
+    providerApiKey: string;
+};
+
+export type CreateAiCopilotOptionsGoogle = CreateAiCopilotOptionsBase & {
+    provider: 'google';
+    providerModel: GoogleModel;
+    providerOptions?: GoogleProviderOptions;
+};
+
+export type CreateAiCopilotOptionsAnthropic = CreateAiCopilotOptionsBase & {
+    provider: 'anthropic';
+    providerModel: AnthropicModel;
+    providerOptions?: AnthropicProviderOptions;
+};
+
+export type CreateAiCopilotOptionsOpenAi = CreateAiCopilotOptionsBase & {
+    provider: 'openai';
+    providerModel: OpenAiModel;
+    providerOptions?: OpenAiProviderOptions;
+};
+
+/**
+ * UserSubscription
+ */
+export type UserSubscription = Subscription & {
+    userId?: string;
+};
+
+/**
+ * Subscription
+ */
+export type Subscription = {
+    kind: string;
+    subjectId: string;
+    createdAt: string;
+};
+
+/**
+ * TriggerInboxNotificationRequestBody
+ */
+export type TriggerInboxNotificationRequestBody = {
+    userId: string;
+    /**
+     * A custom notification kind. Must start with '$' and contain only letters and underscores (max 128 characters).
+     */
+    kind: string;
+    subjectId: string;
+    roomId?: string;
+    activityData: {
+        [key: string]: string | number | boolean;
+    };
+    organizationId?: string;
+};
+
+/**
+ * UserRoomSubscriptionSettings
+ */
+export type UserRoomSubscriptionSettings = {
+    threads: 'all' | 'replies_and_mentions' | 'none';
+    textMentions: 'mine' | 'none';
+    roomId: string;
+};
+
+/**
+ * UpdateRoomSubscriptionSettingsRequestBody
+ *
+ * Partial room subscription settings - all properties are optional
+ */
+export type UpdateRoomSubscriptionSettingsRequestBody = {
+    threads?: 'all' | 'replies_and_mentions' | 'none';
+    textMentions?: 'mine' | 'none';
+};
+
+/**
+ * RoomSubscriptionSettings
+ */
+export type RoomSubscriptionSettings = {
+    threads: 'all' | 'replies_and_mentions' | 'none';
+    textMentions: 'mine' | 'none';
+};
+
+export type GetRoomSubscriptionSettingsResponse = {
+    /**
+     * A cursor to use for pagination. Pass this value as `startingAfter` to get the next page of results. `null` if there are no more results.
+     */
+    nextCursor: string | null;
+    data: Array<UserRoomSubscriptionSettings>;
+};
+
+/**
+ * UpdateNotificationSettingsRequestBody
+ *
+ * Partial notification settings - all properties are optional
+ */
+export type UpdateNotificationSettingsRequestBody = {
+    email?: NotificationChannelSettings;
+    slack?: NotificationChannelSettings;
+    teams?: NotificationChannelSettings;
+    webPush?: NotificationChannelSettings;
+};
+
+export type NotificationChannelSettings = {
+    thread?: boolean;
+    textMention?: boolean;
+    [key: string]: boolean | undefined;
+};
+
+/**
+ * Notification settings for each supported channel
+ */
+export type NotificationSettings = {
+    email?: NotificationChannelSettings;
+    slack?: NotificationChannelSettings;
+    teams?: NotificationChannelSettings;
+    webPush?: NotificationChannelSettings;
+};
+
+/**
+ * InboxNotificationCustomData
+ */
+export type InboxNotificationCustomData = {
+    id: string;
+    kind: 'custom';
+    subjectId: string;
+    roomId?: string | null;
+    readAt: string | null;
+    notifiedAt: string;
+    activities: Array<InboxNotificationActivity>;
+};
+
+/**
+ * InboxNotificationActivity
+ */
+export type InboxNotificationActivity = {
+    id: string;
+    createdAt: string;
+    data: {
+        [key: string]: string | boolean | number;
+    };
+};
+
+/**
+ * InboxNotificationThreadData
+ */
+export type InboxNotificationThreadData = {
+    id: string;
+    kind: string;
+    threadId: string;
+    roomId: string;
+    organizationId?: string;
+    readAt: string | null;
+    notifiedAt: string;
+};
+
+export type GetInboxNotificationsResponse = {
+    /**
+     * A cursor to use for pagination. Pass this value as `startingAfter` to get the next page of results. `null` if there are no more results.
+     */
+    nextCursor: string | null;
+    data: Array<InboxNotificationThreadData | InboxNotificationCustomData>;
+};
+
+/**
+ * RemoveCommentReactionRequestBody
+ */
+export type RemoveCommentReactionRequestBody = {
+    userId: string;
+    removedAt?: string;
+    emoji: string;
+};
+
+/**
+ * AddCommentReactionRequestBody
+ */
+export type AddCommentReactionRequestBody = {
+    userId: string;
+    createdAt?: string;
+    emoji: string;
+};
+
+/**
+ * AttachmentWithUrl
+ */
+export type AttachmentWithUrl = {
+    type: 'attachment';
+    id: string;
+    mimeType: string;
+    name: string;
+    size: number;
+    /**
+     * Presigned download URL for the attachment
+     */
+    url: string;
+    /**
+     * ISO 8601 timestamp when the presigned URL expires
+     */
+    expiresAt: string;
+};
+
+/**
+ * CommentAttachment
+ */
+export type CommentAttachment = {
+    type: 'attachment';
+    id: string;
+    mimeType: string;
+    name: string;
+    size: number;
+};
+
+/**
+ * CommentReaction
+ */
+export type CommentReaction = {
+    userId: string;
+    createdAt: string;
+    emoji: string;
+};
+
+/**
+ * GetThreadSubscriptionsResponse
+ */
+export type GetThreadSubscriptionsResponse = {
+    data: Array<UserSubscription>;
+};
+
+/**
+ * UnsubscribeFromThreadRequestBody
+ */
+export type UnsubscribeFromThreadRequestBody = {
+    userId: string;
+};
+
+/**
+ * SubscribeToThreadRequestBody
+ */
+export type SubscribeToThreadRequestBody = {
+    userId: string;
+};
+
+/**
+ * MarkThreadAsUnresolvedRequestBody
+ */
+export type MarkThreadAsUnresolvedRequestBody = {
+    /**
+     * The user ID of the user who marked the thread as unresolved.
+     */
+    userId: string;
+};
+
+/**
+ * MarkThreadAsResolvedRequestBody
+ */
+export type MarkThreadAsResolvedRequestBody = {
+    /**
+     * The user ID of the user who marked the thread as resolved.
+     */
+    userId: string;
+};
+
+/**
+ * EditCommentRequestBody
+ */
+export type EditCommentRequestBody = {
+    editedAt?: string;
+    body: CommentBody;
+    metadata?: CommentMetadata;
+    attachmentIds?: Array<string>;
+};
+
+/**
+ * CommentMetadata
+ *
+ * Custom metadata attached to a comment. Supports maximum 50 entries. Key length has a limit of 40 characters maximum. Value length has a limit of 4000 characters maximum for strings.
+ */
+export type CommentMetadata = {
+    [key: string]: string | number | boolean;
+};
+
+/**
+ * CommentBody
+ */
+export type CommentBody = {
+    version: number;
+    content: Array<{
+        [key: string]: unknown;
     }>;
 };
 
 /**
- * SetPresenceRequestBody
+ * CreateCommentRequestBody
  */
-export type SetPresenceRequestBody = {
-    /**
-     * ID of the user to set presence for
-     */
+export type CreateCommentRequestBody = {
     userId: string;
-    /**
-     * Presence data as a JSON object
-     */
+    createdAt?: string;
+    body: CommentBody;
+    metadata?: CommentMetadata;
+    attachmentIds?: Array<string>;
+};
+
+/**
+ * Comment
+ */
+export type Comment = {
+    type: 'comment';
+    threadId: string;
+    roomId: string;
+    id: string;
+    userId: string;
+    createdAt: string;
+    editedAt?: string;
+    deletedAt?: string;
+    body?: CommentBody;
+    metadata: CommentMetadata;
+    reactions: Array<CommentReaction>;
+    attachments: Array<CommentAttachment>;
+};
+
+/**
+ * EditCommentMetadataRequestBody
+ */
+export type EditCommentMetadataRequestBody = {
+    metadata: {
+        [key: string]: string | number | boolean | null;
+    };
+    userId: string;
+    updatedAt?: string;
+};
+
+/**
+ * ThreadMetadata
+ *
+ * Custom metadata attached to a thread. Supports maximum 50 entries. Key length has a limit of 40 characters maximum. Value length has a limit of 4000 characters maximum for strings.
+ */
+export type ThreadMetadata = {
+    [key: string]: string | number | boolean;
+};
+
+/**
+ * EditThreadMetadataRequestBody
+ */
+export type EditThreadMetadataRequestBody = {
+    metadata: {
+        [key: string]: string | number | boolean | null;
+    };
+    userId: string;
+    updatedAt?: string;
+};
+
+/**
+ * GetThreadParticipantsResponse
+ */
+export type GetThreadParticipantsResponse = {
+    participantIds: Array<string>;
+};
+
+/**
+ * CreateThreadRequestBody
+ */
+export type CreateThreadRequestBody = {
+    comment: {
+        userId: string;
+        createdAt?: string;
+        body: CommentBody;
+        metadata?: CommentMetadata;
+        attachmentIds?: Array<string>;
+    };
+    metadata?: ThreadMetadata;
+};
+
+/**
+ * Thread
+ */
+export type Thread = {
+    type: 'thread';
+    id: string;
+    roomId: string;
+    comments: Array<Comment>;
+    createdAt: string;
+    metadata: ThreadMetadata;
+    resolved: boolean;
+    updatedAt: string;
+};
+
+/**
+ * GetThreadsResponse
+ */
+export type GetThreadsResponse = {
+    data: Array<Thread>;
+};
+
+/**
+ * CreateYjsVersionResponse
+ */
+export type CreateYjsVersionResponse = {
     data: {
-        [key: string]: unknown;
+        /**
+         * Unique identifier for the created version
+         */
+        id: string;
     };
-    /**
-     * Metadata about the user or agent
-     */
-    userInfo: {
-        /**
-         * Optional name for the user or agent
-         */
-        name?: string;
-        /**
-         * Optional avatar URL for the user
-         */
-        avatar?: string;
-        /**
-         * Optional color for the user
-         */
-        color?: string;
-        [key: string]: unknown;
-    };
-    /**
-     * Time-to-live in seconds (minimum: 2, maximum: 3599). After this duration, the presence will automatically expire.
-     */
-    ttl?: number;
 };
 
 /**
- * GetStorageDocumentResponse
+ * GetYjsVersionsResponse
  */
-export type GetStorageDocumentResponse = {
+export type GetYjsVersionsResponse = {
+    /**
+     * Cursor for pagination to get the next page of results
+     */
+    nextCursor: string | null;
+    data: Array<YjsVersion>;
+};
+
+/**
+ * YjsVersion
+ */
+export type YjsVersion = {
+    /**
+     * Unique identifier for the version
+     */
+    id: string;
+    type: 'historyVersion';
+    /**
+     * ISO 8601 timestamp of when the version was created
+     */
+    createdAt: string;
+    /**
+     * List of users who contributed to this version
+     */
+    authors?: Array<{
+        /**
+         * User ID of the author
+         */
+        id?: string;
+    }>;
+    kind: 'yjs';
+};
+
+/**
+ * IdentifyUserRequestBody
+ */
+export type IdentifyUserRequestBody = {
+    userId: string;
+    organizationId?: string;
+    groupIds?: Array<string>;
+    userInfo?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * AuthorizeUserRequestBody
+ */
+export type AuthorizeUserRequestBody = {
+    userId: string;
+    userInfo?: {
+        [key: string]: unknown;
+    };
+    organizationId?: string;
+    permissions: {
+        [key: string]: Array<string>;
+    };
+};
+
+/**
+ * IdentifyUserResponse
+ */
+export type IdentifyUserResponse = {
+    token: string;
+};
+
+/**
+ * AuthorizeUserResponse
+ */
+export type AuthorizeUserResponse = {
+    token: string;
+};
+
+/**
+ * Error
+ */
+export type Error = {
+    /**
+     * Error code
+     */
+    error?: string;
+    /**
+     * Message explaining the error
+     */
+    message?: string;
+    /**
+     * A suggestion on how to fix the error
+     */
+    suggestion?: string;
+    /**
+     * A link to the documentation
+     */
+    docs?: string;
+};
+
+/**
+ * GetYjsDocumentResponse
+ */
+export type GetYjsDocumentResponse = {
     [key: string]: unknown;
-};
-
-/**
- * InitializeStorageDocumentResponse
- */
-export type InitializeStorageDocumentResponse = {
-    liveblocksType?: 'LiveObject';
-    data?: {
-        [key: string]: unknown;
-    };
 };
 
 /**
@@ -250,1100 +895,196 @@ export type PatchStorageDocumentRequestBody = Array<{
 }>;
 
 /**
- * GetYjsDocumentResponse
+ * InitializeStorageDocumentResponse
  */
-export type GetYjsDocumentResponse = {
+export type InitializeStorageDocumentResponse = {
+    liveblocksType?: 'LiveObject';
+    data?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * GetStorageDocumentResponse
+ */
+export type GetStorageDocumentResponse = {
     [key: string]: unknown;
 };
 
 /**
- * Error
+ * SetPresenceRequestBody
  */
-export type Error = {
+export type SetPresenceRequestBody = {
     /**
-     * Error code
+     * ID of the user to set presence for
      */
-    error?: string;
-    /**
-     * Message explaining the error
-     */
-    message?: string;
-    /**
-     * A suggestion on how to fix the error
-     */
-    suggestion?: string;
-    /**
-     * A link to the documentation
-     */
-    docs?: string;
-};
-
-/**
- * Authorization
- */
-export type Authorization = {
-    token?: string;
-};
-
-/**
- * AuthorizeUserResponse
- */
-export type AuthorizeUserResponse = {
-    token: string;
-};
-
-/**
- * IdentifyUserResponse
- */
-export type IdentifyUserResponse = {
-    token: string;
-};
-
-/**
- * AuthorizeUserRequestBody
- */
-export type AuthorizeUserRequestBody = {
     userId: string;
-    userInfo?: {
-        [key: string]: unknown;
-    };
-    organizationId?: string;
-    permissions: {
-        [key: string]: Array<string>;
-    };
-};
-
-/**
- * IdentifyUserRequestBody
- */
-export type IdentifyUserRequestBody = {
-    userId: string;
-    organizationId?: string;
-    groupIds?: Array<string>;
-    userInfo?: {
-        [key: string]: unknown;
-    };
-};
-
-/**
- * YjsVersion
- */
-export type YjsVersion = {
     /**
-     * Unique identifier for the version
+     * Presence data as a JSON object
      */
-    id: string;
-    type: 'historyVersion';
-    /**
-     * ISO 8601 timestamp of when the version was created
-     */
-    createdAt: string;
-    /**
-     * List of users who contributed to this version
-     */
-    authors?: Array<{
-        /**
-         * User ID of the author
-         */
-        id?: string;
-    }>;
-    kind: 'yjs';
-};
-
-/**
- * GetYjsVersionsResponse
- */
-export type GetYjsVersionsResponse = {
-    /**
-     * Cursor for pagination to get the next page of results
-     */
-    nextCursor: string | null;
-    data: Array<YjsVersion>;
-};
-
-/**
- * CreateYjsVersionResponse
- */
-export type CreateYjsVersionResponse = {
     data: {
-        /**
-         * Unique identifier for the created version
-         */
-        id: string;
-    };
-};
-
-/**
- * GetThreadsResponse
- */
-export type GetThreadsResponse = {
-    data: Array<Thread>;
-};
-
-/**
- * Thread
- */
-export type Thread = {
-    type: 'thread';
-    id: string;
-    roomId: string;
-    comments: Array<Comment>;
-    createdAt: string;
-    metadata: ThreadMetadata;
-    resolved: boolean;
-    updatedAt: string;
-};
-
-/**
- * CreateThreadRequestBody
- */
-export type CreateThreadRequestBody = {
-    comment: {
-        userId: string;
-        createdAt?: string;
-        body: CommentBody;
-        metadata?: CommentMetadata;
-        attachmentIds?: Array<string>;
-    };
-    metadata?: ThreadMetadata;
-};
-
-/**
- * GetThreadParticipantsResponse
- */
-export type GetThreadParticipantsResponse = {
-    participantIds: Array<string>;
-};
-
-/**
- * EditThreadMetadataRequestBody
- */
-export type EditThreadMetadataRequestBody = {
-    metadata: {
-        [key: string]: string | number | boolean | null;
-    };
-    userId: string;
-    updatedAt?: string;
-};
-
-/**
- * ThreadMetadata
- *
- * Custom metadata attached to a thread. Supports maximum 50 entries. Key length has a limit of 40 characters maximum. Value length has a limit of 4000 characters maximum for strings.
- */
-export type ThreadMetadata = {
-    [key: string]: string | number | boolean;
-};
-
-/**
- * CommentBody
- */
-export type CommentBody = {
-    version: number;
-    content: Array<{
         [key: string]: unknown;
+    };
+    /**
+     * Metadata about the user or agent
+     */
+    userInfo: {
+        /**
+         * Optional name for the user or agent
+         */
+        name?: string;
+        /**
+         * Optional avatar URL for the user
+         */
+        avatar?: string;
+        /**
+         * Optional color for the user
+         */
+        color?: string;
+        [key: string]: unknown;
+    };
+    /**
+     * Time-to-live in seconds (minimum: 2, maximum: 3599). After this duration, the presence will automatically expire.
+     */
+    ttl?: number;
+};
+
+/**
+ * ActiveUsersResponse
+ */
+export type ActiveUsersResponse = {
+    data: Array<{
+        type: 'user';
+        id: string | null;
+        info: {
+            [key: string]: unknown;
+        };
+        connectionId: number;
     }>;
 };
 
 /**
- * CommentMetadata
- *
- * Custom metadata attached to a comment. Supports maximum 50 entries. Key length has a limit of 40 characters maximum. Value length has a limit of 4000 characters maximum for strings.
+ * UpdateRoomOrganizationIdRequestBody
  */
-export type CommentMetadata = {
-    [key: string]: string | number | boolean;
-};
-
-/**
- * EditCommentMetadataRequestBody
- */
-export type EditCommentMetadataRequestBody = {
-    metadata: {
-        [key: string]: string | number | boolean | null;
-    };
-    userId: string;
-    updatedAt?: string;
-};
-
-/**
- * Comment
- */
-export type Comment = {
-    type: 'comment';
-    threadId: string;
-    roomId: string;
-    id: string;
-    userId: string;
-    createdAt: string;
-    editedAt?: string;
-    deletedAt?: string;
-    body?: CommentBody;
-    metadata: CommentMetadata;
-    reactions: Array<CommentReaction>;
-    attachments: Array<CommentAttachment>;
-};
-
-/**
- * CreateCommentRequestBody
- */
-export type CreateCommentRequestBody = {
-    userId: string;
-    createdAt?: string;
-    body: CommentBody;
-    metadata?: CommentMetadata;
-    attachmentIds?: Array<string>;
-};
-
-/**
- * EditCommentRequestBody
- */
-export type EditCommentRequestBody = {
-    editedAt?: string;
-    body: CommentBody;
-    metadata?: CommentMetadata;
-    attachmentIds?: Array<string>;
-};
-
-/**
- * MarkThreadAsResolvedRequestBody
- */
-export type MarkThreadAsResolvedRequestBody = {
+export type UpdateRoomOrganizationIdRequestBody = {
     /**
-     * The user ID of the user who marked the thread as resolved.
+     * The current organization ID of the room. Must match the room's current organization ID.
      */
-    userId: string;
-};
-
-/**
- * MarkThreadAsUnresolvedRequestBody
- */
-export type MarkThreadAsUnresolvedRequestBody = {
+    fromOrganizationId: string;
     /**
-     * The user ID of the user who marked the thread as unresolved.
+     * The new organization ID to assign to the room.
      */
-    userId: string;
+    toOrganizationId: string;
 };
 
 /**
- * SubscribeToThreadRequestBody
+ * UpdateRoomIdRequestBody
  */
-export type SubscribeToThreadRequestBody = {
-    userId: string;
-};
-
-/**
- * UnsubscribeFromThreadRequestBody
- */
-export type UnsubscribeFromThreadRequestBody = {
-    userId: string;
-};
-
-/**
- * GetThreadSubscriptionsResponse
- */
-export type GetThreadSubscriptionsResponse = {
-    data: Array<UserSubscription>;
-};
-
-/**
- * CommentReaction
- */
-export type CommentReaction = {
-    userId: string;
-    createdAt: string;
-    emoji: string;
-};
-
-/**
- * CommentAttachment
- */
-export type CommentAttachment = {
-    type: 'attachment';
-    id: string;
-    mimeType: string;
-    name: string;
-    size: number;
-};
-
-/**
- * AttachmentWithUrl
- */
-export type AttachmentWithUrl = {
-    type: 'attachment';
-    id: string;
-    mimeType: string;
-    name: string;
-    size: number;
+export type UpdateRoomIdRequestBody = {
     /**
-     * Presigned download URL for the attachment
+     * The new room ID
      */
-    url: string;
+    newRoomId: string;
+};
+
+/**
+ * UpsertRoomRequestBody
+ */
+export type UpsertRoomRequestBody = {
+    update: UpdateRoomRequestBody;
     /**
-     * ISO 8601 timestamp when the presigned URL expires
+     * Fields to use when creating the room if it does not exist. Unlike the create-room endpoint, `id` is not included here because it is provided in the URL path.
      */
-    expiresAt: string;
-};
-
-/**
- * AddCommentReactionRequestBody
- */
-export type AddCommentReactionRequestBody = {
-    userId: string;
-    createdAt?: string;
-    emoji: string;
-};
-
-/**
- * RemoveCommentReactionRequestBody
- */
-export type RemoveCommentReactionRequestBody = {
-    userId: string;
-    removedAt?: string;
-    emoji: string;
-};
-
-export type GetInboxNotificationsResponse = {
-    /**
-     * A cursor to use for pagination. Pass this value as `startingAfter` to get the next page of results. `null` if there are no more results.
-     */
-    nextCursor: string | null;
-    data: Array<InboxNotificationThreadData | InboxNotificationCustomData>;
-};
-
-/**
- * InboxNotificationThreadData
- */
-export type InboxNotificationThreadData = {
-    id: string;
-    kind: string;
-    threadId: string;
-    roomId: string;
-    organizationId?: string;
-    readAt: string | null;
-    notifiedAt: string;
-};
-
-/**
- * InboxNotificationActivity
- */
-export type InboxNotificationActivity = {
-    id: string;
-    createdAt: string;
-    data: {
-        [key: string]: string | boolean | number;
-    };
-};
-
-/**
- * InboxNotificationCustomData
- */
-export type InboxNotificationCustomData = {
-    id: string;
-    kind: 'custom';
-    subjectId: string;
-    roomId?: string | null;
-    readAt: string | null;
-    notifiedAt: string;
-    activities: Array<InboxNotificationActivity>;
-};
-
-export type NotificationChannelSettings = {
-    thread?: boolean;
-    textMention?: boolean;
-    [key: string]: boolean | undefined;
-};
-
-/**
- * Notification settings for each supported channel
- */
-export type NotificationSettings = {
-    email?: NotificationChannelSettings;
-    slack?: NotificationChannelSettings;
-    teams?: NotificationChannelSettings;
-    webPush?: NotificationChannelSettings;
-};
-
-/**
- * UpdateNotificationSettingsRequestBody
- *
- * Partial notification settings - all properties are optional
- */
-export type UpdateNotificationSettingsRequestBody = {
-    email?: NotificationChannelSettings;
-    slack?: NotificationChannelSettings;
-    teams?: NotificationChannelSettings;
-    webPush?: NotificationChannelSettings;
-};
-
-export type GetRoomSubscriptionSettingsResponse = {
-    /**
-     * A cursor to use for pagination. Pass this value as `startingAfter` to get the next page of results. `null` if there are no more results.
-     */
-    nextCursor: string | null;
-    data: Array<UserRoomSubscriptionSettings>;
-};
-
-/**
- * RoomSubscriptionSettings
- */
-export type RoomSubscriptionSettings = {
-    threads: 'all' | 'replies_and_mentions' | 'none';
-    textMentions: 'mine' | 'none';
-};
-
-/**
- * UpdateRoomSubscriptionSettingsRequestBody
- *
- * Partial room subscription settings - all properties are optional
- */
-export type UpdateRoomSubscriptionSettingsRequestBody = {
-    threads?: 'all' | 'replies_and_mentions' | 'none';
-    textMentions?: 'mine' | 'none';
-};
-
-/**
- * UserRoomSubscriptionSettings
- */
-export type UserRoomSubscriptionSettings = {
-    threads: 'all' | 'replies_and_mentions' | 'none';
-    textMentions: 'mine' | 'none';
-    roomId: string;
-};
-
-/**
- * TriggerInboxNotificationRequestBody
- */
-export type TriggerInboxNotificationRequestBody = {
-    userId: string;
-    /**
-     * A custom notification kind. Must start with '$' and contain only letters and underscores (max 128 characters).
-     */
-    kind: string;
-    subjectId: string;
-    roomId?: string;
-    activityData: {
-        [key: string]: string | number | boolean;
-    };
-    organizationId?: string;
-};
-
-/**
- * Subscription
- */
-export type Subscription = {
-    kind: string;
-    subjectId: string;
-    createdAt: string;
-};
-
-/**
- * UserSubscription
- */
-export type UserSubscription = Subscription & {
-    userId?: string;
-};
-
-export type AiCopilotBase = {
-    type: 'copilot';
-    id: string;
-    name: string;
-    description?: string;
-    systemPrompt: string;
-    knowledgePrompt?: string;
-    alwaysUseKnowledge: boolean;
-    createdAt: string;
-    updatedAt: string;
-    lastUsedAt?: string;
-    settings?: AiCopilotProviderSettings;
-};
-
-/**
- * AiCopilotOpenAi
- */
-export type AiCopilotOpenAi = AiCopilotBase & {
-    provider: 'openai';
-    providerModel: OpenAiModel;
-};
-
-/**
- * AiCopilotAnthropic
- */
-export type AiCopilotAnthropic = AiCopilotBase & {
-    provider: 'anthropic';
-    providerModel: AnthropicModel;
-    providerOptions?: AnthropicProviderOptions;
-};
-
-/**
- * AiCopilotGoogle
- */
-export type AiCopilotGoogle = AiCopilotBase & {
-    provider: 'google';
-    providerModel: GoogleModel;
-    providerOptions?: GoogleProviderOptions;
-};
-
-/**
- * AiCopilotOpenAiCompatible
- */
-export type AiCopilotOpenAiCompatible = AiCopilotBase & {
-    provider: 'openai-compatible';
-    providerModel: string;
-    compatibleProviderName: string;
-    providerBaseUrl: string;
-};
-
-/**
- * AiCopilot
- */
-export type AiCopilot = ({
-    provider: 'openai';
-} & AiCopilotOpenAi) | ({
-    provider: 'anthropic';
-} & AiCopilotAnthropic) | ({
-    provider: 'google';
-} & AiCopilotGoogle) | ({
-    provider: 'openai-compatible';
-} & AiCopilotOpenAiCompatible);
-
-export type CreateAiCopilotOptionsBase = {
-    name: string;
-    description?: string;
-    systemPrompt: string;
-    knowledgePrompt?: string;
-    alwaysUseKnowledge?: boolean;
-    settings?: AiCopilotProviderSettings;
-    providerApiKey: string;
-};
-
-export type CreateAiCopilotOptionsOpenAi = CreateAiCopilotOptionsBase & {
-    provider: 'openai';
-    providerModel: OpenAiModel;
-    providerOptions?: OpenAiProviderOptions;
-};
-
-export type CreateAiCopilotOptionsAnthropic = CreateAiCopilotOptionsBase & {
-    provider: 'anthropic';
-    providerModel: AnthropicModel;
-    providerOptions?: AnthropicProviderOptions;
-};
-
-export type CreateAiCopilotOptionsGoogle = CreateAiCopilotOptionsBase & {
-    provider: 'google';
-    providerModel: GoogleModel;
-    providerOptions?: GoogleProviderOptions;
-};
-
-export type CreateAiCopilotOptionsOpenAiCompatible = CreateAiCopilotOptionsBase & {
-    provider: 'openai-compatible';
-    providerModel: string;
-    compatibleProviderName: string;
-    providerBaseUrl: string;
-};
-
-export type CreateAiCopilotRequestBody = ({
-    provider: 'openai';
-} & CreateAiCopilotOptionsOpenAi) | ({
-    provider: 'anthropic';
-} & CreateAiCopilotOptionsAnthropic) | ({
-    provider: 'google';
-} & CreateAiCopilotOptionsGoogle) | ({
-    provider: 'openai-compatible';
-} & CreateAiCopilotOptionsOpenAiCompatible);
-
-/**
- * UpdateAiCopilotRequestBody
- */
-export type UpdateAiCopilotRequestBody = {
-    name?: string;
-    description?: string | null;
-    systemPrompt?: string;
-    knowledgePrompt?: string | null;
-    alwaysUseKnowledge?: boolean;
-    settings?: AiCopilotProviderSettings | null;
-    providerApiKey?: string;
-    provider?: 'openai' | 'anthropic' | 'google' | 'openai-compatible';
-    providerModel?: string;
-    providerOptions?: OpenAiProviderOptions | AnthropicProviderOptions | GoogleProviderOptions | null;
-    compatibleProviderName?: string;
-    providerBaseUrl?: string;
-};
-
-/**
- * AiCopilotProviderSettings
- */
-export type AiCopilotProviderSettings = {
-    maxTokens?: number;
-    temperature?: number;
-    topP?: number;
-    topK?: number;
-    frequencyPenalty?: number;
-    presencePenalty?: number;
-    stopSequences?: Array<string>;
-    seed?: number;
-    maxRetries?: number;
-};
-
-/**
- * OpenAiModel
- */
-export type OpenAiModel = 'o1' | 'o1-mini' | 'o3' | 'o3-mini' | 'o4-mini' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4o' | 'gpt-4o-mini' | 'gpt-4-turbo' | 'gpt-4' | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-chat-latest' | 'gpt-5.1' | 'gpt-5.1-mini' | 'gpt-5.1-chat-latest';
-
-/**
- * AnthropicModel
- */
-export type AnthropicModel = 'claude-sonnet-4-5-20250929' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-1-20250805' | 'claude-4-opus-20250514' | 'claude-4-sonnet-20250514' | 'claude-3-7-sonnet-20250219' | 'claude-3-5-sonnet-latest' | 'claude-3-5-haiku-latest' | 'claude-3-opus-latest';
-
-/**
- * GoogleModel
- */
-export type GoogleModel = 'gemini-2.5-flash' | 'gemini-2.5-pro' | 'gemini-2.0-flash-001' | 'gemini-1.5-flash' | 'gemini-1.5-pro';
-
-export type OpenAiProviderOptions = {
-    openai: {
-        reasoningEffort?: 'low' | 'medium' | 'high';
-        webSearch?: {
-            allowedDomains?: Array<string>;
-        };
-    };
-};
-
-export type AnthropicProviderOptions = {
-    anthropic: {
-        thinking?: {
-            type: 'enabled';
-            budgetTokens: number;
-        } | {
-            type: 'disabled';
-        };
+    create?: {
         /**
-         * AnthropicWebSearch
+         * The organization ID to associate with the room. Defaults to "default" if not provided.
          */
-        webSearch?: {
-            allowedDomains?: Array<string>;
-        };
+        organizationId?: string;
+        defaultAccesses: RoomPermission;
+        usersAccesses?: RoomAccesses;
+        groupsAccesses?: RoomAccesses;
+        metadata?: RoomMetadata;
     };
 };
 
 /**
- * GoogleProviderOptions
+ * RoomMetadata
  */
-export type GoogleProviderOptions = {
-    google: {
-        thinkingConfig?: {
-            thinkingBudget?: number;
-        };
+export type RoomMetadata = {
+    [key: string]: string | Array<string>;
+};
+
+export type RoomAccesses = {
+    [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'>;
+};
+
+export type RoomPermission = Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'>;
+
+/**
+ * UpdateRoomRequestBody
+ */
+export type UpdateRoomRequestBody = {
+    defaultAccesses?: RoomPermission | null;
+    /**
+     * A map of user identifiers to permissions list. Setting the value as `null` will clear all users’ accesses. Setting one user identifier as `null` will clear this user’s accesses.
+     */
+    usersAccesses?: {
+        [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'> | null;
+    };
+    /**
+     * A map of group identifiers to permissions list. Setting the value as `null` will clear all groups’ accesses. Setting one group identifier as `null` will clear this group’s accesses.
+     */
+    groupsAccesses?: {
+        [key: string]: Array<'room:write' | 'room:read' | 'room:presence:write' | 'comments:write'> | null;
+    };
+    metadata?: {
+        [key: string]: string | Array<string> | null;
     };
 };
 
 /**
- * GetAiCopilotsResponse
+ * CreateRoomRequestBody
  */
-export type GetAiCopilotsResponse = {
+export type CreateRoomRequestBody = {
+    id: string;
+    /**
+     * The organization ID to associate with the room. Defaults to "default" if not provided.
+     */
+    organizationId?: string;
+    defaultAccesses: RoomPermission;
+    usersAccesses?: RoomAccesses;
+    groupsAccesses?: RoomAccesses;
+    metadata?: RoomMetadata;
+    /**
+     * Preferred storage engine version to use when creating new rooms. The v2 Storage engine supports larger documents, is more performant, has native streaming support, and will become the default in the future.
+     */
+    engine?: 1 | 2;
+};
+
+/**
+ * GetRoomsResponse
+ */
+export type GetRoomsResponse = {
     nextCursor: string | null;
-    data: Array<AiCopilot>;
+    data: Array<Room>;
 };
 
-export type KnowledgeSourceBase = {
+/**
+ * Room
+ */
+export type Room = {
     id: string;
-    createdAt: string;
-    updatedAt: string;
-    lastIndexedAt: string;
-    status: 'ingesting' | 'ready' | 'error';
-    errorMessage?: string;
-};
-
-export type KnowledgeSourceWebSource = KnowledgeSourceBase & {
-    type: 'ai-knowledge-web-source';
-    link: {
-        url: string;
-        type: 'individual_link' | 'crawl' | 'sitemap';
-    };
-};
-
-export type KnowledgeSourceFileSource = KnowledgeSourceBase & {
-    type: 'ai-knowledge-file-source';
-    file: {
-        name: string;
-        mimeType: string;
-    };
-};
-
-/**
- * KnowledgeSource
- */
-export type KnowledgeSource = ({
-    type: 'KnowledgeSourceWebSource';
-} & KnowledgeSourceWebSource) | ({
-    type: 'KnowledgeSourceFileSource';
-} & KnowledgeSourceFileSource);
-
-/**
- * GetKnowledgeSourcesResponse
- */
-export type GetKnowledgeSourcesResponse = {
-    nextCursor: string | null;
-    data: Array<KnowledgeSource>;
-};
-
-/**
- * CreateWebKnowledgeSourceRequestBody
- */
-export type CreateWebKnowledgeSourceRequestBody = {
-    copilotId: string;
-    url: string;
-    type: 'individual_link' | 'crawl' | 'sitemap';
-};
-
-/**
- * CreateWebKnowledgeSourceResponse
- */
-export type CreateWebKnowledgeSourceResponse = {
-    id: string;
-};
-
-/**
- * GetFileKnowledgeSourceMarkdownResponse
- */
-export type GetFileKnowledgeSourceMarkdownResponse = {
-    id: string;
-    content: string;
-};
-
-/**
- * WebKnowledgeSourceLink
- */
-export type WebKnowledgeSourceLink = {
-    id: string;
-    url: string;
-    status: 'ingesting' | 'ready' | 'error';
-    createdAt: string;
-    lastIndexedAt: string;
-};
-
-/**
- * GetWebKnowledgeSourceLinksResponse
- */
-export type GetWebKnowledgeSourceLinksResponse = {
-    nextCursor: string | null;
-    data: Array<WebKnowledgeSourceLink>;
-};
-
-/**
- * Group
- */
-export type Group = {
-    type: 'group';
-    id: string;
+    type: 'room';
+    /**
+     * The organization ID associated with this room.
+     */
     organizationId: string;
+    lastConnectionAt?: string;
     createdAt: string;
-    updatedAt: string;
-    scopes: {
-        mention?: true;
-    };
-    members: Array<GroupMember>;
-};
-
-/**
- * GroupMember
- */
-export type GroupMember = {
-    id: string;
-    addedAt: string;
-};
-
-/**
- * CreateGroupRequestBody
- */
-export type CreateGroupRequestBody = {
-    id: string;
-    memberIds?: Array<string>;
-    organizationId?: string;
-    scopes?: {
-        mention?: true;
-    };
-};
-
-/**
- * AddGroupMembersRequestBody
- */
-export type AddGroupMembersRequestBody = {
-    memberIds: Array<string>;
-};
-
-/**
- * RemoveGroupMembersRequestBody
- */
-export type RemoveGroupMembersRequestBody = {
-    memberIds: Array<string>;
-};
-
-/**
- * GetGroupsResponse
- */
-export type GetGroupsResponse = {
-    data: Array<Group>;
-    nextCursor: string | null;
-};
-
-/**
- * GetUserGroupsResponse
- */
-export type GetUserGroupsResponse = {
-    data: Array<Group>;
-    nextCursor: string | null;
-};
-
-/**
- * ManagementProjectType
- */
-export type ManagementProjectType = 'dev' | 'prod';
-
-/**
- * ManagementProjectRegion
- */
-export type ManagementProjectRegion = 'earth' | 'eu' | 'fedramp';
-
-/**
- * ManagementProjectVersionCreationTimeout
- *
- * False to disable timeout or number of seconds between 30 and 300.
- */
-export type ManagementProjectVersionCreationTimeout = false | number;
-
-/**
- * ManagementProjectPublicKey
- */
-export type ManagementProjectPublicKey = {
-    activated: boolean;
-    createdAt: string;
-    value: string;
-};
-
-/**
- * ManagementProjectSecretKey
- */
-export type ManagementProjectSecretKey = {
-    createdAt: string;
-    value: string;
-};
-
-/**
- * ManagementProject
- */
-export type ManagementProject = {
-    id: string;
-    teamId: string;
-    type: ManagementProjectType;
-    name: string;
-    description: string | null;
-    createdAt: string;
-    updatedAt: string;
-    publicKey: ManagementProjectPublicKey;
-    secretKey: ManagementProjectSecretKey | null;
-    region: ManagementProjectRegion;
-    versionCreationTimeout: ManagementProjectVersionCreationTimeout;
-};
-
-/**
- * GetManagementProjectsResponse
- */
-export type GetManagementProjectsResponse = {
-    data: Array<ManagementProject>;
-    nextCursor: string | null;
-};
-
-/**
- * CreateManagementProjectRequestBody
- */
-export type CreateManagementProjectRequestBody = {
-    name?: string;
-    description?: string;
-    type: ManagementProjectType;
-    versionCreationTimeout?: ManagementProjectVersionCreationTimeout;
-};
-
-/**
- * UpdateManagementProjectRequestBody
- */
-export type UpdateManagementProjectRequestBody = {
-    name?: string;
-    description?: string;
-    versionCreationTimeout?: ManagementProjectVersionCreationTimeout;
-};
-
-/**
- * RollProjectPublicApiKeyResponse
- */
-export type RollProjectPublicApiKeyResponse = {
-    publicKey: ManagementProjectPublicKey;
-};
-
-/**
- * RollProjectPublicApiKeyRequestBody
- */
-export type RollProjectPublicApiKeyRequestBody = {
-    expirationIn?: 'now' | '1h' | '1hour' | '1 hour' | '24hrs' | '24hours' | '24 hours' | '3d' | '3days' | '3 days' | '7d' | '7days' | '7 days';
-};
-
-/**
- * RollProjectSecretApiKeyRequestBody
- */
-export type RollProjectSecretApiKeyRequestBody = {
-    expirationIn?: 'now' | '1h' | '1hour' | '1 hour' | '24hrs' | '24hours' | '24 hours' | '3d' | '3days' | '3 days' | '7d' | '7days' | '7 days';
-};
-
-/**
- * ManagementProjectRollProjectSecretApiKeyResponseSecretKeyResponse
- */
-export type RollProjectSecretApiKeyResponse = {
-    secretKey: ManagementProjectSecretKey;
-};
-
-/**
- * ManagementWebhookEvent
- */
-export type ManagementWebhookEvent = 'storageUpdated' | 'userEntered' | 'userLeft' | 'roomCreated' | 'roomDeleted' | 'commentCreated' | 'commentEdited' | 'commentDeleted' | 'commentReactionAdded' | 'commentReactionRemoved' | 'commentMetadataUpdated' | 'threadMetadataUpdated' | 'threadCreated' | 'threadDeleted' | 'ydocUpdated' | 'notification' | 'threadMarkedAsResolved' | 'threadMarkedAsUnresolved';
-
-/**
- * ManagementWebhookSecret
- */
-export type ManagementWebhookSecret = {
-    value: string;
-};
-
-/**
- * ManagementWebhook
- */
-export type ManagementWebhook = {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    url: string;
-    disabled: boolean;
-    rateLimit?: number;
-    subscribedEvents: Array<ManagementWebhookEvent>;
-    secret: ManagementWebhookSecret | null;
-    additionalHeaders?: ManagementWebhookAdditionalHeaders;
-    storageUpdatedThrottleSeconds: number;
-    yDocUpdatedThrottleSeconds: number;
-};
-
-/**
- * CreateManagementWebhookRequestBody
- */
-export type CreateManagementWebhookRequestBody = {
-    url: string;
-    subscribedEvents: Array<ManagementWebhookEvent>;
-    rateLimit?: number;
-    additionalHeaders?: {
-        [key: string]: string;
-    };
-    storageUpdatedThrottleSeconds?: number;
-    yDocUpdatedThrottleSeconds?: number;
-};
-
-/**
- * UpdateManagementWebhookRequestBody
- */
-export type UpdateManagementWebhookRequestBody = {
-    url?: string;
-    subscribedEvents?: Array<ManagementWebhookEvent>;
-    rateLimit?: number;
-    storageUpdatedThrottleSeconds?: number;
-    yDocUpdatedThrottleSeconds?: number;
-    disabled?: boolean;
-};
-
-/**
- * ManagementWebhookAdditionalHeaders
- */
-export type ManagementWebhookAdditionalHeaders = {
-    [key: string]: string;
-};
-
-/**
- * UpsertManagementWebhookHeadersRequestBody
- */
-export type UpsertManagementWebhookHeadersRequestBody = {
-    headers: ManagementWebhookAdditionalHeaders;
-};
-
-/**
- * GetManagementWebhookHeadersResponse
- */
-export type GetManagementWebhookHeadersResponse = {
-    headers: ManagementWebhookAdditionalHeaders;
-};
-
-/**
- * DeleteManagementWebhookHeadersRequestBody
- */
-export type DeleteManagementWebhookHeadersRequestBody = {
-    headers: Array<string>;
-};
-
-/**
- * DeleteManagementWebhookHeadersResponse
- */
-export type DeleteManagementWebhookHeadersResponse = {
-    headers: ManagementWebhookAdditionalHeaders;
-};
-
-/**
- * ManagementWebhookHeadersDelete
- */
-export type ManagementWebhookHeadersDelete = {
-    headers: Array<string>;
-};
-
-/**
- * UpsertManagementWebhookHeadersResponse
- */
-export type UpsertManagementWebhookHeadersResponse = {
-    headers: {
-        [key: string]: string;
-    };
-};
-
-/**
- * GetManagementWebhooksResponse
- */
-export type GetManagementWebhooksResponse = {
-    data: Array<ManagementWebhook>;
-    nextCursor: string | null;
-};
-
-/**
- * RotateManagementWebhookSecretResponse
- */
-export type RotateManagementWebhookSecretResponse = {
-    secret: ManagementWebhookSecret;
-    message: string;
-};
-
-/**
- * RecoverManagementWebhookFailedMessagesRequestBody
- */
-export type RecoverManagementWebhookFailedMessagesRequestBody = {
-    since: string;
-};
-
-/**
- * TestManagementWebhookRequestBody
- */
-export type TestManagementWebhookRequestBody = {
-    subscribedEvent: ManagementWebhookEvent;
-};
-
-/**
- * TestManagementWebhookResponse
- */
-export type TestManagementWebhookResponse = {
-    message: {
-        id: string;
-        deliveredAt?: string | null;
-    };
+    defaultAccesses: RoomPermission;
+    usersAccesses: RoomAccesses;
+    groupsAccesses: RoomAccesses;
+    metadata: RoomMetadata;
 };
 
 export type GetRoomsData = {
@@ -4614,841 +4355,3 @@ export type GetWebKnowledgeSourceLinksResponses = {
 };
 
 export type GetWebKnowledgeSourceLinksResponse2 = GetWebKnowledgeSourceLinksResponses[keyof GetWebKnowledgeSourceLinksResponses];
-
-export type GetManagementProjectsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * A limit on the number of projects to return. The limit can range between 1 and 100, and defaults to 20.
-         */
-        limit?: number;
-        /**
-         * A cursor used for pagination. Get the value from the `nextCursor` response of the previous page.
-         */
-        cursor?: string;
-    };
-    url: '/management/projects';
-};
-
-export type GetManagementProjectsErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type GetManagementProjectsError = GetManagementProjectsErrors[keyof GetManagementProjectsErrors];
-
-export type GetManagementProjectsResponses = {
-    /**
-     * Success. Returns the list of projects and the next page cursor.
-     */
-    200: GetManagementProjectsResponse;
-};
-
-export type GetManagementProjectsResponse2 = GetManagementProjectsResponses[keyof GetManagementProjectsResponses];
-
-export type CreateManagementProjectData = {
-    body: CreateManagementProjectRequestBody;
-    path?: never;
-    query?: never;
-    url: '/management/projects';
-};
-
-export type CreateManagementProjectErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type CreateManagementProjectError = CreateManagementProjectErrors[keyof CreateManagementProjectErrors];
-
-export type CreateManagementProjectResponses = {
-    /**
-     * Success. Returns the created project.
-     */
-    200: ManagementProject;
-};
-
-export type CreateManagementProjectResponse = CreateManagementProjectResponses[keyof CreateManagementProjectResponses];
-
-export type DeleteManagementProjectData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}';
-};
-
-export type DeleteManagementProjectErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type DeleteManagementProjectError = DeleteManagementProjectErrors[keyof DeleteManagementProjectErrors];
-
-export type DeleteManagementProjectResponses = {
-    /**
-     * Success. The project was deleted.
-     */
-    200: unknown;
-};
-
-export type GetManagementProjectData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}';
-};
-
-export type GetManagementProjectErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type GetManagementProjectError = GetManagementProjectErrors[keyof GetManagementProjectErrors];
-
-export type GetManagementProjectResponses = {
-    /**
-     * Success. Returns the project.
-     */
-    200: ManagementProject;
-};
-
-export type GetManagementProjectResponse = GetManagementProjectResponses[keyof GetManagementProjectResponses];
-
-export type UpdateManagementProjectData = {
-    body: UpdateManagementProjectRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}';
-};
-
-export type UpdateManagementProjectErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type UpdateManagementProjectError = UpdateManagementProjectErrors[keyof UpdateManagementProjectErrors];
-
-export type UpdateManagementProjectResponses = {
-    /**
-     * Success. Returns the updated project.
-     */
-    200: ManagementProject;
-};
-
-export type UpdateManagementProjectResponse = UpdateManagementProjectResponses[keyof UpdateManagementProjectResponses];
-
-export type ActivateProjectPublicApiKeyData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/api-keys/public/activate';
-};
-
-export type ActivateProjectPublicApiKeyErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type ActivateProjectPublicApiKeyError = ActivateProjectPublicApiKeyErrors[keyof ActivateProjectPublicApiKeyErrors];
-
-export type ActivateProjectPublicApiKeyResponses = {
-    /**
-     * Success. The public key was activated.
-     */
-    200: unknown;
-};
-
-export type DeactivateProjectPublicApiKeyData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/api-keys/public/deactivate';
-};
-
-export type DeactivateProjectPublicApiKeyErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type DeactivateProjectPublicApiKeyError = DeactivateProjectPublicApiKeyErrors[keyof DeactivateProjectPublicApiKeyErrors];
-
-export type DeactivateProjectPublicApiKeyResponses = {
-    /**
-     * Success. The public key was deactivated.
-     */
-    200: unknown;
-};
-
-export type RollProjectPublicApiKeyData = {
-    body?: RollProjectPublicApiKeyRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/api-keys/public/roll';
-};
-
-export type RollProjectPublicApiKeyErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type RollProjectPublicApiKeyError = RollProjectPublicApiKeyErrors[keyof RollProjectPublicApiKeyErrors];
-
-export type RollProjectPublicApiKeyResponses = {
-    /**
-     * Success. Returns the rolled public key.
-     */
-    200: RollProjectPublicApiKeyResponse;
-};
-
-export type RollProjectPublicApiKeyResponse2 = RollProjectPublicApiKeyResponses[keyof RollProjectPublicApiKeyResponses];
-
-export type RollProjectSecretApiKeyData = {
-    body?: RollProjectSecretApiKeyRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/api-keys/secret/roll';
-};
-
-export type RollProjectSecretApiKeyErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type RollProjectSecretApiKeyError = RollProjectSecretApiKeyErrors[keyof RollProjectSecretApiKeyErrors];
-
-export type RollProjectSecretApiKeyResponses = {
-    /**
-     * Success. Returns the rolled secret key.
-     */
-    200: RollProjectSecretApiKeyResponse;
-};
-
-export type RollProjectSecretApiKeyResponse2 = RollProjectSecretApiKeyResponses[keyof RollProjectSecretApiKeyResponses];
-
-export type GetManagementWebhooksData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: {
-        /**
-         * A limit on the number of webhooks to return. The limit can range between 1 and 100, and defaults to 20.
-         */
-        limit?: number;
-        /**
-         * A cursor used for pagination. Get the value from the `nextCursor` response of the previous page.
-         */
-        cursor?: string;
-    };
-    url: '/management/projects/{projectId}/webhooks';
-};
-
-export type GetManagementWebhooksErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type GetManagementWebhooksError = GetManagementWebhooksErrors[keyof GetManagementWebhooksErrors];
-
-export type GetManagementWebhooksResponses = {
-    /**
-     * Success. Returns the list of webhooks and the next page cursor.
-     */
-    200: GetManagementWebhooksResponse;
-};
-
-export type GetManagementWebhooksResponse2 = GetManagementWebhooksResponses[keyof GetManagementWebhooksResponses];
-
-export type CreateManagementWebhookData = {
-    body: CreateManagementWebhookRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks';
-};
-
-export type CreateManagementWebhookErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type CreateManagementWebhookError = CreateManagementWebhookErrors[keyof CreateManagementWebhookErrors];
-
-export type CreateManagementWebhookResponses = {
-    /**
-     * Success. Returns the created webhook.
-     */
-    200: ManagementWebhook;
-};
-
-export type CreateManagementWebhookResponse = CreateManagementWebhookResponses[keyof CreateManagementWebhookResponses];
-
-export type DeleteManagementWebhookData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}';
-};
-
-export type DeleteManagementWebhookErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type DeleteManagementWebhookError = DeleteManagementWebhookErrors[keyof DeleteManagementWebhookErrors];
-
-export type DeleteManagementWebhookResponses = {
-    /**
-     * Success. The webhook was deleted.
-     */
-    200: unknown;
-};
-
-export type GetManagementWebhookData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}';
-};
-
-export type GetManagementWebhookErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type GetManagementWebhookError = GetManagementWebhookErrors[keyof GetManagementWebhookErrors];
-
-export type GetManagementWebhookResponses = {
-    /**
-     * Success. Returns the webhook.
-     */
-    200: ManagementWebhook;
-};
-
-export type GetManagementWebhookResponse = GetManagementWebhookResponses[keyof GetManagementWebhookResponses];
-
-export type UpdateManagementWebhookData = {
-    body: UpdateManagementWebhookRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}';
-};
-
-export type UpdateManagementWebhookErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type UpdateManagementWebhookError = UpdateManagementWebhookErrors[keyof UpdateManagementWebhookErrors];
-
-export type UpdateManagementWebhookResponses = {
-    /**
-     * Success. Returns the updated webhook.
-     */
-    200: ManagementWebhook;
-};
-
-export type UpdateManagementWebhookResponse = UpdateManagementWebhookResponses[keyof UpdateManagementWebhookResponses];
-
-export type RollManagementWebhookSecretData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/secret/roll';
-};
-
-export type RollManagementWebhookSecretErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type RollManagementWebhookSecretError = RollManagementWebhookSecretErrors[keyof RollManagementWebhookSecretErrors];
-
-export type RollManagementWebhookSecretResponses = {
-    /**
-     * Success. Returns the rotated secret key.
-     */
-    200: RotateManagementWebhookSecretResponse;
-};
-
-export type RollManagementWebhookSecretResponse = RollManagementWebhookSecretResponses[keyof RollManagementWebhookSecretResponses];
-
-export type GetManagementWebhookAdditionalHeadersData = {
-    body?: never;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/additional-headers';
-};
-
-export type GetManagementWebhookAdditionalHeadersErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-};
-
-export type GetManagementWebhookAdditionalHeadersError = GetManagementWebhookAdditionalHeadersErrors[keyof GetManagementWebhookAdditionalHeadersErrors];
-
-export type GetManagementWebhookAdditionalHeadersResponses = {
-    /**
-     * Success. Returns the headers.
-     */
-    200: GetManagementWebhookHeadersResponse;
-};
-
-export type GetManagementWebhookAdditionalHeadersResponse = GetManagementWebhookAdditionalHeadersResponses[keyof GetManagementWebhookAdditionalHeadersResponses];
-
-export type UpsertManagementWebhookAdditionalHeadersData = {
-    body: UpsertManagementWebhookHeadersRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/additional-headers';
-};
-
-export type UpsertManagementWebhookAdditionalHeadersErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type UpsertManagementWebhookAdditionalHeadersError = UpsertManagementWebhookAdditionalHeadersErrors[keyof UpsertManagementWebhookAdditionalHeadersErrors];
-
-export type UpsertManagementWebhookAdditionalHeadersResponses = {
-    /**
-     * Success. Returns the updated headers.
-     */
-    200: UpsertManagementWebhookHeadersResponse;
-};
-
-export type UpsertManagementWebhookAdditionalHeadersResponse = UpsertManagementWebhookAdditionalHeadersResponses[keyof UpsertManagementWebhookAdditionalHeadersResponses];
-
-export type DeleteManagementWebhookAdditionalHeadersData = {
-    body: DeleteManagementWebhookHeadersRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/delete-additional-headers';
-};
-
-export type DeleteManagementWebhookAdditionalHeadersErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type DeleteManagementWebhookAdditionalHeadersError = DeleteManagementWebhookAdditionalHeadersErrors[keyof DeleteManagementWebhookAdditionalHeadersErrors];
-
-export type DeleteManagementWebhookAdditionalHeadersResponses = {
-    /**
-     * Success. Returns the updated headers.
-     */
-    200: DeleteManagementWebhookHeadersResponse;
-};
-
-export type DeleteManagementWebhookAdditionalHeadersResponse = DeleteManagementWebhookAdditionalHeadersResponses[keyof DeleteManagementWebhookAdditionalHeadersResponses];
-
-export type RecoverFailedWebhookMessagesData = {
-    body: RecoverManagementWebhookFailedMessagesRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/recover-failed-messages';
-};
-
-export type RecoverFailedWebhookMessagesErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type RecoverFailedWebhookMessagesError = RecoverFailedWebhookMessagesErrors[keyof RecoverFailedWebhookMessagesErrors];
-
-export type RecoverFailedWebhookMessagesResponses = {
-    /**
-     * Success. The recover task was started.
-     */
-    200: unknown;
-};
-
-export type SendTestWebhookData = {
-    body: TestManagementWebhookRequestBody;
-    path: {
-        /**
-         * ID of the project
-         */
-        projectId: string;
-        /**
-         * ID of the webhook
-         */
-        webhookId: string;
-    };
-    query?: never;
-    url: '/management/projects/{projectId}/webhooks/{webhookId}/test';
-};
-
-export type SendTestWebhookErrors = {
-    /**
-     * Missing or wrong credentials.
-     */
-    401: Error;
-    /**
-     * Unauthorized access.
-     */
-    403: Error;
-    /**
-     * Resource not found.
-     */
-    404: Error;
-    /**
-     * Unprocessable entity.
-     */
-    422: Error;
-};
-
-export type SendTestWebhookError = SendTestWebhookErrors[keyof SendTestWebhookErrors];
-
-export type SendTestWebhookResponses = {
-    /**
-     * Success. Returns the test message ID.
-     */
-    200: TestManagementWebhookResponse;
-};
-
-export type SendTestWebhookResponse = SendTestWebhookResponses[keyof SendTestWebhookResponses];

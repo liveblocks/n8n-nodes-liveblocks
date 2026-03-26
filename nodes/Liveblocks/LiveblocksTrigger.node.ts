@@ -221,6 +221,12 @@ export class LiveblocksTrigger implements INodeType {
 		],
 	};
 
+	/* 
+	The project management API uses a different API key not available to this package
+	so we cannot automatically check/create webhooks here using webhookMethods
+	webhookMethods: {}
+	*/
+	
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('liveblocksWebhookSigningSecretApi');
 		const webhookSecret = credentials.webhookSigningSecret as string;
