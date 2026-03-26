@@ -1,5 +1,5 @@
 {
-  "name": "Automatic AI reply when mentioned in a comment",
+  "name": "Automatic AI reply when mentioned in a Liveblocks comment",
   "nodes": [
     {
       "parameters": {
@@ -11,7 +11,7 @@
       "type": "CUSTOM.liveblocksTrigger",
       "typeVersion": 1,
       "position": [
-        -16,
+        -64,
         0
       ],
       "id": "55c5a866-a618-4fdb-9d66-d898217f6003",
@@ -92,7 +92,7 @@
       "typeVersion": 1,
       "position": [
         592,
-        -112
+        0
       ],
       "id": "e53009ce-0aa9-4630-a728-49c6f6755c2e",
       "name": "Get a thread",
@@ -113,7 +113,7 @@
       "typeVersion": 3.1,
       "position": [
         800,
-        -112
+        0
       ],
       "id": "50982aa6-8fc1-4f33-bb9a-e1b8860dc462",
       "name": "AI Agent"
@@ -132,7 +132,7 @@
       "typeVersion": 1.3,
       "position": [
         800,
-        64
+        176
       ],
       "id": "9d18bb25-fa44-4238-807e-0b1685883d09",
       "name": "Anthropic Chat Model",
@@ -156,7 +156,7 @@
       "typeVersion": 1,
       "position": [
         1136,
-        -112
+        0
       ],
       "id": "7d6ea1ce-ecd4-4a1c-8490-a5915c95d4d6",
       "name": "Create a comment",
@@ -169,194 +169,85 @@
     },
     {
       "parameters": {
-        "content": "When a comment is created in a room.",
-        "height": 80,
-        "width": 150
+        "content": "## Fetch thread and generate\nIf `true`, fetch the entire comment thread, pass it to AI so it understands the full context, and ask it to write up a response.",
+        "height": 432,
+        "width": 512,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -16,
+        544,
         -112
-      ],
-      "id": "a8a0d9c6-96d2-41f1-a22f-aef62d31f15b",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "Check if the comment mentions the AI agent. Their ID is `\"__AI_AGENT\"` in this demo.",
-        "height": 80,
-        "width": 288
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        176,
-        -112
-      ],
-      "id": "134df2ab-daab-46b2-bc3d-4ccb79e2a626",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "If `false`, do nothing. AI is not meant to reply.",
-        "height": 80,
-        "width": 150
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        528,
-        112
-      ],
-      "id": "2010ef4a-922f-4213-b406-cf55e9fc1344",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "If `true`, fetch the entire comment thread, pass it to AI so it understands the full context, and ask it to write up a response.",
-        "height": 80,
-        "width": 432
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        592,
-        -224
       ],
       "id": "d414863b-9cf3-4e28-9888-a4ea6553dd67",
       "name": "Sticky Note3"
     },
     {
       "parameters": {
-        "content": "The response is then added as a comment in the same thread. The user ID is set to `\"__AI_AGENT\"`.",
-        "height": 80,
-        "width": 256
+        "content": "## Automatic AI reply when mentioned in a Liveblocks comment\n \nThis example uses [Liveblocks Comments](https://liveblocks.io/comments), collaborative commenting components for React. When an AI assistant is mentioned in a thread  (e.g. \"@AI Assistant\"), it will automatically leave a response.\n\nUsing [webhooks](https://liveblocks.io/docs/platform/webhooks), this workflow is triggered when a comment is created in a thread. If the agent's ID (`\"__AI_AGENT\"`) was mentioned, an AI agent is given the entire thread context, and asked to create a response. This response is then added, and users will see it appear in their apps in real time.\n\n### Setup\nThis workflow requires a Comments app installed and webhooks set up in the Liveblocks dashboard. You can try it with a demo application:\n\n- [ ] Download the [Next.js comments example](https://liveblocks.io/examples/comments/nextjs-comments), and run it with a secret key.\n- [ ] Find `database.ts` inside the example and uncomment the AI assistant user.\n- [ ] Insert the secret key from the project into n8n nodes: \"Get a comment\", \"Get a thread\", \"Create a comment\".\n- [ ] Go to the [Liveblocks dashboard](https://liveblocks.io/dashboard), open your project and go to \"Webhooks\". Create a new webhook in your project using a placeholder URL, and selecting \"commentCreated\" events.\n- [ ] Copy your webhook secret from this page and paste it into the \"Liveblocks Trigger\" node.\n- [ ] Expose the webhook URL from the trigger, for example with `localtunnel` or `ngrok`. Copy the production URL from the \"Liveblocks Trigger\" and replace `localhost:5678` with the new URL.\n- [ ] Your workflow is now set up! Tag @AI Assistant in the application to trigger it.\n\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n`npx localtunnel --port 5678 --subdomain your-name-here`\n\nThis creates a URL like:\n`https://honest-months-fix.loca.lt`\n\nThe URL you need for the dashboard looks like this:\n`https://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook`\n",
+        "height": 944,
+        "width": 502
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1136,
-        -224
-      ],
-      "id": "bf1158a8-32ae-47ad-9802-afcba9752877",
-      "name": "Sticky Note4"
-    },
-    {
-      "parameters": {
-        "content": "## Automatic AI reply when mentioned in a comment\n \nThis example uses [Liveblocks Comments](https://liveblocks.io/comments), collaborative commenting components for React. When an AI assistant is mentioned in a thread  (e.g. \"@AI Assistant\"), it will automatically leave a response.\n\nUsing [webhooks](https://liveblocks.io/docs/platform/webhooks), this workflow is triggered when a comment is created in a thread. If the agent's ID (`\"__AI_AGENT\"`) was mentioned, an AI agent is given the entire thread context, and asked to create a response. This response is then added, and users will see it appear in their apps in real time.\n",
-        "height": 352,
-        "width": 326
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -416,
-        -352
+        -704,
+        -112
       ],
       "id": "016a250a-59d2-4cf0-9847-803b08bc9af6",
       "name": "Sticky Note5"
     },
     {
       "parameters": {
-        "content": "### Set up\nThis workflow requires a Comments app installed and webhooks set up in the Liveblocks dashboard. You can try it with a demo application:\n\n1. Download the [Next.js comments example](https://liveblocks.io/examples/comments/nextjs-comments), and run it with a secret key.\n2. Find `database.ts` inside the example and uncomment the AI assistant user.\n3. Insert the secret key from the project into n8n nodes: \"Get a comment\", \"Get a thread\", \"Create a comment\".\n4. Go to the [Liveblocks dashboard](https://liveblocks.io/dashboard), open your project and go to \"Webhooks\". Create a new webhook in your project using a placeholder URL, and selecting \"commentCreated\" events.\n5. Copy your webhook secret from this page and paste it into the \"Liveblocks Trigger\" node.\n6. Expose the webhook URL from the trigger, for example with `localtunnel` or `ngrok`. Copy the production URL from the \"Liveblocks Trigger\" and replace `localhost:5678` with the new URL.\n6. Your workflow is now set up! Tag @AI Assistant in the application to trigger it.\n",
-        "height": 576,
-        "width": 320
+        "content": "## Comment created\nWhen a comment is created in a room.",
+        "height": 272,
+        "width": 230,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -416,
-        16
+        -128,
+        -112
       ],
-      "id": "5c0688a9-6a38-408e-b2d7-788907f6e1c1",
+      "id": "8bac501d-631f-43dc-aafa-7ebecaed2535",
       "name": "Sticky Note6"
     },
     {
       "parameters": {
-        "content": "\n#### Localtunnel\nThe easiest way to expose your webhook URL:\n```\nnpx localtunnel --port 5678 --subdomain your-name-here\n```\nThis creates a URL like:\n```\nhttps://honest-months-fix.loca.lt\n```\nThe URL you need for the dashboard looks like this:\n```\nhttps://honest-months-fix.loca.lt/webhook/9cc66974-aaaf-4720-b557-1267105ca78b/webhook\n```",
-        "height": 304,
-        "width": 576
+        "content": "## Check if AI mentioned\nCheck if a comment mentions the AI agent. Their ID is `\"__AI_AGENT\"` in this demo.",
+        "height": 272,
+        "width": 384,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -80,
-        288
+        128,
+        -112
       ],
-      "id": "09f27b2c-0b75-48fd-8a8c-f81ca2e18919",
-      "name": "Sticky Note7"
+      "id": "00f027b5-c4cb-4643-b0b7-ebe4d80a075d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Add response to thread\nThe response is then added as a comment in the same thread. The user ID is set to `\"__AI_AGENT\"`.",
+        "height": 272,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        -112
+      ],
+      "id": "85d1fc00-7999-4328-a19d-810167084e2e",
+      "name": "Sticky Note"
     }
   ],
-  "pinData": {
-    "Get a comment": [
-      {
-        "json": {
-          "type": "comment",
-          "threadId": "th_B3kEgFjNOXAO9MV0xjpax",
-          "roomId": "liveblocks:examples:nextjs-comments",
-          "id": "cm_Mp-z9SKTHnHURB5IqHozH",
-          "userId": "quinn-elton@example.com",
-          "createdAt": "2026-03-24T12:07:31.048Z",
-          "reactions": [],
-          "attachments": [],
-          "metadata": {},
-          "body": {
-            "version": 1,
-            "content": [
-              {
-                "type": "paragraph",
-                "children": [
-                  {
-                    "text": "what do you prefer "
-                  },
-                  {
-                    "type": "mention",
-                    "id": "__AI_AGENT",
-                    "kind": "user"
-                  },
-                  {
-                    "text": "?"
-                  }
-                ]
-              }
-            ]
-          },
-          "mentionedUserIds": [
-            "__AI_AGENT"
-          ],
-          "bodyPlain": "what do you prefer @__AI_AGENT?",
-          "bodyHtml": "<p>what do you prefer <span data-mention>@__AI_AGENT</span>?</p>",
-          "bodyMarkdown": "what do you prefer @\\_\\_AI\\_AGENT?"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ],
-    "Liveblocks Trigger": [
-      {
-        "json": {
-          "event": {
-            "data": {
-              "commentId": "cm_R2zso81zUshMVmyac1fL6",
-              "createdAt": "2026-03-24T11:55:18.580Z",
-              "createdBy": "user-2",
-              "projectId": "69c16cfcfebcafb68e5158b5",
-              "roomId": "liveblocks:examples:nextjs-comments",
-              "threadId": "th_BarBv3xTxgQU-Sn1sxsbn"
-            },
-            "type": "commentCreated"
-          },
-          "eventType": "commentCreated",
-          "timestamp": "2026-03-24T11:55:19.503Z"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "Liveblocks Trigger": {
       "main": [
@@ -430,7 +321,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "e5e29623-a321-488f-a9a0-13e7deaed35f",
+  "versionId": "d37e40e2-49e8-470e-8a13-c687497a2d3a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"

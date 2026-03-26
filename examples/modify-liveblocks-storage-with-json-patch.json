@@ -6,7 +6,7 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -176,
+        -240,
         -32
       ],
       "id": "6e1dccd1-9468-4674-8d5b-ca7a6d97eada",
@@ -21,7 +21,7 @@
       "type": "CUSTOM.liveblocks",
       "typeVersion": 1,
       "position": [
-        16,
+        -48,
         -32
       ],
       "id": "24255aba-7d7d-417a-9890-4da3962fec00",
@@ -43,7 +43,7 @@
       "type": "CUSTOM.liveblocks",
       "typeVersion": 1,
       "position": [
-        208,
+        144,
         -32
       ],
       "id": "4a11137e-f359-4c83-9718-502c01ecf18d",
@@ -164,7 +164,7 @@
       "type": "CUSTOM.liveblocks",
       "typeVersion": 1,
       "position": [
-        1104,
+        1216,
         -32
       ],
       "id": "2b0083c0-9367-45b3-9a1e-4adc057dde49",
@@ -178,29 +178,30 @@
     },
     {
       "parameters": {
-        "content": "## Modify Liveblocks Storage with JSON Patch\n\nThis example uses [Liveblocks Storage](https://liveblocks.io/docs/ready-made-features/multiplayer/sync-engine/liveblocks-storage), a sync engine created by [Liveblocks](https://liveblocks.io) that allows you to create collaborative applications like Figma, Pitch, and Spline. When we fetch the Storage value for a [room](https://liveblocks.io/docs/concepts#Rooms), we're fetching the state of the multiplayer document which users are collaborating on.   \n\nIn this workflow example, our document holds a list of shapes, like a drawing tool. Here's a rectangle, for example:\n\n```\n{\n  \"id\": \"rect-1\",\n  \"type\": \"rectangle\",\n  \"x\": 100,\n  \"y\": 150,\n  \"width\": 200,\n  \"height\": 100,\n  \"color\": \"#ff0000\"\n}\n```\n\nPicture this hooked up to a design tool like Figma, with the user asking AI to edit their document.\n\nIn these nodes, to generates a [JSON Patch](https://liveblocks.io/docs/guides/modifying-storage-via-rest-api-with-json-patch) operation from the user's request (\"Add a blue circle, and make the square orange\") and applies it to the collaborative document. \n\nAs soon as the JSON Patch operation has run, each user's design tool in their web browser will update with the changes in real time.\n\nAdditionally, we're setting presence in the room, which means that the AI will appear in the document's live avatar stacks while it works, before disappearing shortly after.",
-        "height": 880,
+        "content": "## Modify Liveblocks Storage with JSON Patch\n\n### How it works\nThis example uses [Liveblocks Storage](https://liveblocks.io/docs/ready-made-features/multiplayer/sync-engine/liveblocks-storage), a sync engine created by [Liveblocks](https://liveblocks.io) that allows you to create collaborative applications like Figma, Pitch, and Spline. When we fetch the Storage value for a [room](https://liveblocks.io/docs/concepts#Rooms), we're fetching the state of the multiplayer document which users are collaborating on.   \n\nIn this workflow example, our document holds a list of shapes, like a drawing tool. Here's a rectangle, for example:\n\n```\n{\n  \"id\": \"rect-1\",\n  \"type\": \"rectangle\",\n  \"x\": 100,\n  \"y\": 150,\n  \"width\": 200,\n  \"height\": 100,\n  \"color\": \"#ff0000\"\n}\n```\n\nPicture this hooked up to a design tool like Figma, with the user asking AI to edit their document.\n\nIn these nodes, to generates a [JSON Patch](https://liveblocks.io/docs/guides/modifying-storage-via-rest-api-with-json-patch) operation from the user's request (\"Add a blue circle, and make the square orange\") and applies it to the collaborative document. \n\nAs soon as the JSON Patch operation has run, each user's design tool in their web browser will update with the changes in real time.\n\nAdditionally, we're setting presence in the room, which means that the AI will appear in the document's live avatar stacks while it works, before disappearing shortly after.\n\n### Setup\nNo setup required. Replace the trigger with any you like to use this workflow.",
+        "height": 1008,
         "width": 336
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -592,
-        -336
+        -656,
+        -160
       ],
       "id": "890b299e-fc1d-450b-9d11-4f508085f668",
       "name": "Sticky Note"
     },
     {
       "parameters": {
-        "content": "Creating a multiplayer room and initializing it with a Storage value. In a real app, this will already be created.",
-        "height": 80,
-        "width": 288
+        "content": "## Create a room\nCreate a multiplayer room and initialize it with a Storage value. In a real app, this'll already be created.",
+        "height": 288,
+        "width": 384,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        16,
+        -96,
         -144
       ],
       "id": "755f766e-03ef-4a68-9c38-ffd3df1e2f98",
@@ -208,14 +209,15 @@
     },
     {
       "parameters": {
-        "content": "**The important part.** Getting the full Storage value, passing it to AI, and asking it to run a user query on the data. The AI is told to return JSON Patch operations, and is then applied to Storage. On the front end, the room updates in real time.",
-        "height": 80,
-        "width": 608
+        "content": "## Patching Storage with AI\nGetting the full Storage value, passing it to AI, and asking it to run a user query on the data. The AI is told to return JSON Patch operations, and is then applied to Storage. On the front end, the room updates in real time.",
+        "height": 480,
+        "width": 768,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        400,
+        320,
         -144
       ],
       "id": "cb17c385-0125-421a-81d4-643267f0bf67",
@@ -223,14 +225,15 @@
     },
     {
       "parameters": {
-        "content": "Checking the final value after applying the operation.",
-        "height": 80,
-        "width": 214
+        "content": "## Check value\nChecking the final value after applying the operation.",
+        "height": 288,
+        "width": 294,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1104,
+        1120,
         -144
       ],
       "id": "8c76fbef-ee98-4f95-a3e9-735e395aeb11",
@@ -247,8 +250,8 @@
       "type": "CUSTOM.liveblocks",
       "typeVersion": 1,
       "position": [
-        400,
-        448
+        432,
+        464
       ],
       "id": "b4e7c6eb-7cd7-4330-b9ce-c629e87ab06c",
       "name": "Set presence in a room",
@@ -261,15 +264,16 @@
     },
     {
       "parameters": {
-        "content": "Show AI presence in the app's avatar stack.",
-        "height": 80,
-        "width": 214
+        "content": "## Show presence\nShow AI presence in the app's avatar stack.",
+        "height": 240,
+        "width": 326,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        400,
-        336
+        320,
+        384
       ],
       "id": "5444c0cb-e9a4-4282-bdc2-1906e0fb0f29",
       "name": "Sticky Note4"
@@ -285,8 +289,8 @@
       "type": "CUSTOM.liveblocks",
       "typeVersion": 1,
       "position": [
-        912,
-        448
+        880,
+        464
       ],
       "id": "2721aedc-d0cf-484c-8243-671837003c22",
       "name": "Set presence in a room1",
@@ -299,18 +303,19 @@
     },
     {
       "parameters": {
-        "content": "Tell the AI presence to expire in 2 seconds.",
-        "height": 80,
-        "width": 214
+        "content": "## Hide presence\nTell the AI presence to expire in 2 seconds.",
+        "height": 240,
+        "width": 326,
+        "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        912,
-        336
+        768,
+        384
       ],
-      "id": "09fb8445-f8f9-4e20-a89c-c88ffda91626",
-      "name": "Sticky Note5"
+      "id": "a883b6ad-ac74-47c5-b0f3-8893e4794f78",
+      "name": "Sticky Note6"
     }
   ],
   "pinData": {},
@@ -419,7 +424,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "15d8cbdb-7e74-4dc9-a40c-aea2ba38cb2f",
+  "versionId": "abc3c565-0fb3-47e8-b22f-b2edb33d2b98",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "fdd58b028250e4811c462e28c5cbca067bcbfe46a2f4e6fd38647ade19e87602"
