@@ -4,6 +4,7 @@ export type LiveblocksResource =
 	| 'yjs'
 	| 'thread'
 	| 'comment'
+	| 'feed'
 	| 'attachment'
 	| 'user'
 	| 'inbox'
@@ -16,6 +17,7 @@ export type PathParamKey =
 	| 'roomId'
 	| 'threadId'
 	| 'commentId'
+	| 'feedId'
 	| 'userId'
 	| 'groupId'
 	| 'copilotId'
@@ -23,6 +25,7 @@ export type PathParamKey =
 	| 'versionId'
 	| 'attachmentId'
 	| 'inboxNotificationId'
+	| 'messageId'
 	| 'name';
 
 export type BodyMode = 'none' | 'json' | 'optionalJson' | 'binaryUpload';

@@ -288,6 +288,26 @@ export function assembleQuery(
 			if (startingAfter !== undefined) q.startingAfter = startingAfter;
 			return Object.keys(q).length ? q : undefined;
 		}
+		case 'getFeeds': {
+			const q: Record<string, unknown> = {};
+			const cursor = str(getParam, 'q_getFeeds_cursor');
+			const since = num(getParam, 'q_getFeeds_since');
+			const limit = num(getParam, 'q_getFeeds_limit');
+			if (cursor !== undefined) q.cursor = cursor;
+			if (since !== undefined && since > 0) q.since = since;
+			if (limit !== undefined) q.limit = limit;
+			return Object.keys(q).length ? q : undefined;
+		}
+		case 'getFeedMessages': {
+			const q: Record<string, unknown> = {};
+			const cursor = str(getParam, 'q_getFeedMessages_cursor');
+			const since = num(getParam, 'q_getFeedMessages_since');
+			const limit = num(getParam, 'q_getFeedMessages_limit');
+			if (cursor !== undefined) q.cursor = cursor;
+			if (since !== undefined && since > 0) q.since = since;
+			if (limit !== undefined) q.limit = limit;
+			return Object.keys(q).length ? q : undefined;
+		}
 		default:
 			return undefined;
 	}
@@ -775,6 +795,39 @@ export function assembleBody(operation: string, _bodyMode: BodyMode, getParam: G
 				url,
 				type,
 			};
+		}
+		case 'createFeed': {
+			const feedId = str(getParam, 'createFeed_feedId');
+			if (!feedId) throw new Error('Feed ID is required');
+			const body: Record<string, unknown> = { feedId };
+			const metadata = parseJsonObject(getParam('createFeed_metadata'), true);
+			if (metadata !== undefined) body.metadata = metadata;
+			const ts = num(getParam, 'createFeed_timestamp');
+			if (ts !== undefined && ts > 0) body.timestamp = ts;
+			return body;
+		}
+		case 'updateFeed': {
+			const metadata = parseJsonObject(getParam('updateFeed_metadata'), false);
+			if (!metadata) throw new Error('metadata JSON is required');
+			return { metadata };
+		}
+		case 'createFeedMessage': {
+			const data = parseJsonObject(getParam('createFeedMessage_data'), false);
+			if (!data) throw new Error('Message data JSON is required');
+			const body: Record<string, unknown> = { data };
+			const id = str(getParam, 'createFeedMessage_id');
+			if (id !== undefined) body.id = id;
+			const ts = num(getParam, 'createFeedMessage_timestamp');
+			if (ts !== undefined && ts > 0) body.timestamp = ts;
+			return body;
+		}
+		case 'updateFeedMessage': {
+			const data = parseJsonObject(getParam('updateFeedMessage_data'), false);
+			if (!data) throw new Error('Message data JSON is required');
+			const body: Record<string, unknown> = { data };
+			const ts = num(getParam, 'updateFeedMessage_timestamp');
+			if (ts !== undefined && ts > 0) body.timestamp = ts;
+			return body;
 		}
 		default:
 			throw new Error(`No structured body assembler for operation: ${operation}`);

@@ -16,6 +16,7 @@ const RESOURCE_MENU: Array<{ name: string; value: LiveblocksResource; descriptio
 	{ name: 'AI Knowledge', value: 'aiKnowledge', description: 'Knowledge sources' },
 	{ name: 'Attachment', value: 'attachment', description: 'Attachment metadata and URLs' },
 	{ name: 'Comment', value: 'comment', description: 'Comments and reactions' },
+	{ name: 'Feed', value: 'feed', description: 'Room feeds and feed messages' },
 	{ name: 'Group', value: 'group', description: 'Groups and membership' },
 	{ name: 'Inbox', value: 'inbox', description: 'Trigger and system inbox actions' },
 	{
@@ -46,6 +47,10 @@ const PATH_LABELS: Record<PathParamKey, { displayName: string; description: stri
 		displayName: 'Comment ID',
 		description: 'Comment identifier',
 	},
+	feedId: {
+		displayName: 'Feed ID',
+		description: 'Feed identifier',
+	},
 	userId: {
 		displayName: 'User ID',
 		description: 'User identifier',
@@ -73,6 +78,10 @@ const PATH_LABELS: Record<PathParamKey, { displayName: string; description: stri
 	inboxNotificationId: {
 		displayName: 'Inbox Notification ID',
 		description: 'Inbox notification identifier',
+	},
+	messageId: {
+		displayName: 'Message ID',
+		description: 'Feed message identifier',
 	},
 	name: {
 		displayName: 'Knowledge File Name',
@@ -136,6 +145,8 @@ export function buildLiveblocksProperties(): INodeProperties[] {
 		'roomId',
 		'threadId',
 		'commentId',
+		'feedId',
+		'messageId',
 		'userId',
 		'groupId',
 		'copilotId',

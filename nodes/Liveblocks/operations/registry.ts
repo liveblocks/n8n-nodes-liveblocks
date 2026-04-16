@@ -11,6 +11,7 @@ const resourceOrder: LiveblocksResource[] = [
 	'aiKnowledge',
 	'attachment',
 	'comment',
+	'feed',
 	'group',
 	'inbox',
 	'room',

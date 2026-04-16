@@ -705,6 +705,127 @@ export type CreateThreadRequestBody = {
 };
 
 /**
+ * GetFeedMessagesResponse
+ */
+export type GetFeedMessagesResponse = {
+    /**
+     * Pass as `cursor` to fetch the next page, or null when there are no more results.
+     */
+    nextCursor: string | null;
+    data: Array<FeedMessage>;
+};
+
+/**
+ * FeedMessage
+ *
+ * Message objects returned by the API use `createdAt` and `updatedAt` (Unix time in milliseconds). Request bodies for create/update use `timestamp` for optional custom times.
+ */
+export type FeedMessage = {
+    id: string;
+    /**
+     * Unix timestamp in milliseconds when the message was created.
+     */
+    createdAt: number;
+    /**
+     * Unix timestamp in milliseconds when the message was last updated.
+     */
+    updatedAt: number;
+    data: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * GetFeedsResponse
+ */
+export type GetFeedsResponse = {
+    /**
+     * Pass as `cursor` to fetch the next page, or null when there are no more results.
+     */
+    nextCursor: string | null;
+    data: Array<Feed>;
+};
+
+/**
+ * Feed
+ *
+ * Feed objects returned by the API use `createdAt` and `updatedAt` (Unix time in milliseconds).
+ */
+export type Feed = {
+    feedId: string;
+    metadata: {
+        [key: string]: unknown;
+    };
+    /**
+     * Unix timestamp in milliseconds when the feed was created.
+     */
+    createdAt: number;
+    /**
+     * Unix timestamp in milliseconds when the feed was last updated.
+     */
+    updatedAt: number;
+};
+
+/**
+ * UpdateFeedMessageRequestBody
+ *
+ * Request body for `PATCH /v2/rooms/{roomId}/feeds/{feedId}/messages/{messageId}`. Optional update time is sent as `timestamp` (milliseconds), not `updatedAt`.
+ */
+export type UpdateFeedMessageRequestBody = {
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional. Unix timestamp in milliseconds to record as the update time. If omitted, the server uses the current time.
+     */
+    timestamp?: number;
+};
+
+/**
+ * CreateFeedMessageRequestBody
+ *
+ * Request body for `POST /v2/rooms/{roomId}/feeds/{feedId}/messages`. Optional message time is sent as `timestamp` (milliseconds), not `createdAt`.
+ */
+export type CreateFeedMessageRequestBody = {
+    /**
+     * Optional client-provided message id. If omitted, the server generates one.
+     */
+    id?: string;
+    /**
+     * Optional. Unix timestamp in milliseconds for the message's creation time. If omitted, the server uses the current time.
+     */
+    timestamp?: number;
+    data: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * UpdateFeedRequestBody
+ */
+export type UpdateFeedRequestBody = {
+    metadata: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * CreateFeedRequestBody
+ *
+ * Request body for `POST /v2/rooms/{roomId}/feeds`. Optional creation time is sent as `timestamp` (milliseconds), not `createdAt`.
+ */
+export type CreateFeedRequestBody = {
+    feedId: string;
+    metadata?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional. Unix timestamp in milliseconds for the feed's creation time. If omitted, the server uses the current time.
+     */
+    timestamp?: number;
+};
+
+/**
  * Thread
  */
 export type Thread = {
@@ -2863,6 +2984,426 @@ export type GetThreadInboxNotificationsResponses = {
 };
 
 export type GetThreadInboxNotificationsResponse = GetThreadInboxNotificationsResponses[keyof GetThreadInboxNotificationsResponses];
+
+export type GetFeedsData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+    };
+    query?: {
+        /**
+         * A cursor used for pagination. Get the value from the `nextCursor` response of the previous page.
+         */
+        cursor?: string;
+        /**
+         * Only return feeds with `createdAt` greater than this Unix timestamp in milliseconds.
+         */
+        since?: number;
+        /**
+         * A limit on the number of feeds to be returned. The limit can range between 1 and 100, and defaults to 20.
+         */
+        limit?: number;
+    };
+    url: '/rooms/{roomId}/feeds';
+};
+
+export type GetFeedsErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+};
+
+export type GetFeedsError = GetFeedsErrors[keyof GetFeedsErrors];
+
+export type GetFeedsResponses = {
+    /**
+     * Success. Returns list of feeds in a room.
+     */
+    200: GetFeedsResponse;
+};
+
+export type GetFeedsResponse2 = GetFeedsResponses[keyof GetFeedsResponses];
+
+export type CreateFeedData = {
+    body: CreateFeedRequestBody;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds';
+};
+
+export type CreateFeedErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+    /**
+     * Unprocessable entity.
+     */
+    422: Error;
+};
+
+export type CreateFeedError = CreateFeedErrors[keyof CreateFeedErrors];
+
+export type CreateFeedResponses = {
+    /**
+     * Success. Returns the created feed.
+     */
+    200: Feed;
+};
+
+export type CreateFeedResponse = CreateFeedResponses[keyof CreateFeedResponses];
+
+export type DeleteFeedData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}';
+};
+
+export type DeleteFeedErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+};
+
+export type DeleteFeedError = DeleteFeedErrors[keyof DeleteFeedErrors];
+
+export type DeleteFeedResponses = {
+    /**
+     * Success. The feed was deleted.
+     */
+    204: void;
+};
+
+export type DeleteFeedResponse = DeleteFeedResponses[keyof DeleteFeedResponses];
+
+export type GetFeedData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}';
+};
+
+export type GetFeedErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+};
+
+export type GetFeedError = GetFeedErrors[keyof GetFeedErrors];
+
+export type GetFeedResponses = {
+    /**
+     * Success. Returns the feed.
+     */
+    200: Feed;
+};
+
+export type GetFeedResponse = GetFeedResponses[keyof GetFeedResponses];
+
+export type UpdateFeedData = {
+    body: UpdateFeedRequestBody;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}';
+};
+
+export type UpdateFeedErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+    /**
+     * Unprocessable entity.
+     */
+    422: Error;
+};
+
+export type UpdateFeedError = UpdateFeedErrors[keyof UpdateFeedErrors];
+
+export type UpdateFeedResponses = {
+    /**
+     * Success. Returns the updated feed.
+     */
+    200: Feed;
+};
+
+export type UpdateFeedResponse = UpdateFeedResponses[keyof UpdateFeedResponses];
+
+export type GetFeedMessagesData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+    };
+    query?: {
+        /**
+         * A cursor used for pagination. Get the value from the `nextCursor` response of the previous page.
+         */
+        cursor?: string;
+        /**
+         * Only return messages with `createdAt` greater than this Unix timestamp in milliseconds.
+         */
+        since?: number;
+        /**
+         * A limit on the number of messages to be returned. The limit can range between 1 and 100, and defaults to 20.
+         */
+        limit?: number;
+    };
+    url: '/rooms/{roomId}/feeds/{feedId}/messages';
+};
+
+export type GetFeedMessagesErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+};
+
+export type GetFeedMessagesError = GetFeedMessagesErrors[keyof GetFeedMessagesErrors];
+
+export type GetFeedMessagesResponses = {
+    /**
+     * Success. Returns list of messages in a feed.
+     */
+    200: GetFeedMessagesResponse;
+};
+
+export type GetFeedMessagesResponse2 = GetFeedMessagesResponses[keyof GetFeedMessagesResponses];
+
+export type CreateFeedMessageData = {
+    body: CreateFeedMessageRequestBody;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}/messages';
+};
+
+export type CreateFeedMessageErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+    /**
+     * Unprocessable entity.
+     */
+    422: Error;
+};
+
+export type CreateFeedMessageError = CreateFeedMessageErrors[keyof CreateFeedMessageErrors];
+
+export type CreateFeedMessageResponses = {
+    /**
+     * Success. Returns the created feed message.
+     */
+    200: FeedMessage;
+};
+
+export type CreateFeedMessageResponse = CreateFeedMessageResponses[keyof CreateFeedMessageResponses];
+
+export type DeleteFeedMessageData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+        /**
+         * ID of the message
+         */
+        messageId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}/messages/{messageId}';
+};
+
+export type DeleteFeedMessageErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+};
+
+export type DeleteFeedMessageError = DeleteFeedMessageErrors[keyof DeleteFeedMessageErrors];
+
+export type DeleteFeedMessageResponses = {
+    /**
+     * Success. The feed message was deleted.
+     */
+    204: void;
+};
+
+export type DeleteFeedMessageResponse = DeleteFeedMessageResponses[keyof DeleteFeedMessageResponses];
+
+export type UpdateFeedMessageData = {
+    body: UpdateFeedMessageRequestBody;
+    path: {
+        /**
+         * ID of the room
+         */
+        roomId: string;
+        /**
+         * ID of the feed
+         */
+        feedId: string;
+        /**
+         * ID of the message
+         */
+        messageId: string;
+    };
+    query?: never;
+    url: '/rooms/{roomId}/feeds/{feedId}/messages/{messageId}';
+};
+
+export type UpdateFeedMessageErrors = {
+    /**
+     * Missing or wrong credentials.
+     */
+    401: Error;
+    /**
+     * Unauthorized access.
+     */
+    403: Error;
+    /**
+     * Resource not found.
+     */
+    404: Error;
+    /**
+     * Unprocessable entity.
+     */
+    422: Error;
+};
+
+export type UpdateFeedMessageError = UpdateFeedMessageErrors[keyof UpdateFeedMessageErrors];
+
+export type UpdateFeedMessageResponses = {
+    /**
+     * Success. Returns the updated feed message.
+     */
+    200: FeedMessage;
+};
+
+export type UpdateFeedMessageResponse = UpdateFeedMessageResponses[keyof UpdateFeedMessageResponses];
 
 export type AuthorizeUserData = {
     body: AuthorizeUserRequestBody;
