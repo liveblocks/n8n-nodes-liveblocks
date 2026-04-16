@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddCommentReactionData, AddCommentReactionErrors, AddCommentReactionResponses, AddGroupMembersData, AddGroupMembersErrors, AddGroupMembersResponses, AuthorizeUserData, AuthorizeUserErrors, AuthorizeUserResponses, BroadcastEventData, BroadcastEventErrors, BroadcastEventResponses, CreateAiCopilotData, CreateAiCopilotErrors, CreateAiCopilotResponses, CreateCommentData, CreateCommentErrors, CreateCommentResponses, CreateFileKnowledgeSourceData, CreateFileKnowledgeSourceErrors, CreateFileKnowledgeSourceResponses, CreateGroupData, CreateGroupErrors, CreateGroupResponses, CreateRoomData, CreateRoomErrors, CreateRoomResponses, CreateThreadData, CreateThreadErrors, CreateThreadResponses, CreateWebKnowledgeSourceData, CreateWebKnowledgeSourceErrors, CreateWebKnowledgeSourceResponses, CreateYjsVersionData, CreateYjsVersionErrors, CreateYjsVersionResponses, DeleteAiCopilotData, DeleteAiCopilotErrors, DeleteAiCopilotResponses, DeleteAllInboxNotificationsData, DeleteAllInboxNotificationsErrors, DeleteAllInboxNotificationsResponses, DeleteCommentData, DeleteCommentErrors, DeleteCommentResponses, DeleteFileKnowledgeSourceData, DeleteFileKnowledgeSourceErrors, DeleteFileKnowledgeSourceResponses, DeleteGroupData, DeleteGroupErrors, DeleteGroupResponses, DeleteInboxNotificationData, DeleteInboxNotificationErrors, DeleteInboxNotificationResponses, DeleteNotificationSettingsData, DeleteNotificationSettingsErrors, DeleteNotificationSettingsResponses, DeleteRoomData, DeleteRoomErrors, DeleteRoomNotificationSettingsData, DeleteRoomNotificationSettingsErrors, DeleteRoomNotificationSettingsResponses, DeleteRoomResponses, DeleteRoomSubscriptionSettingsData, DeleteRoomSubscriptionSettingsErrors, DeleteRoomSubscriptionSettingsResponses, DeleteStorageDocumentData, DeleteStorageDocumentErrors, DeleteStorageDocumentResponses, DeleteThreadData, DeleteThreadErrors, DeleteThreadResponses, DeleteWebKnowledgeSourceData, DeleteWebKnowledgeSourceErrors, DeleteWebKnowledgeSourceResponses, EditCommentData, EditCommentErrors, EditCommentMetadataData, EditCommentMetadataErrors, EditCommentMetadataResponses, EditCommentResponses, EditThreadMetadataData, EditThreadMetadataErrors, EditThreadMetadataResponses, GetActiveUsersData, GetActiveUsersErrors, GetActiveUsersResponses, GetAiCopilotData, GetAiCopilotErrors, GetAiCopilotResponses, GetAiCopilotsData, GetAiCopilotsErrors, GetAiCopilotsResponses, GetAttachmentData, GetAttachmentErrors, GetAttachmentResponses, GetCommentData, GetCommentErrors, GetCommentResponses, GetFileKnowledgeSourceMarkdownData, GetFileKnowledgeSourceMarkdownErrors, GetFileKnowledgeSourceMarkdownResponses, GetGroupData, GetGroupErrors, GetGroupResponses, GetGroupsData, GetGroupsErrors, GetGroupsResponses, GetInboxNotificationData, GetInboxNotificationErrors, GetInboxNotificationResponses, GetInboxNotificationsData, GetInboxNotificationsErrors, GetInboxNotificationsResponses, GetKnowledgeSourceData, GetKnowledgeSourceErrors, GetKnowledgeSourceResponses, GetKnowledgeSourcesData, GetKnowledgeSourcesErrors, GetKnowledgeSourcesResponses, GetNotificationSettingsData, GetNotificationSettingsErrors, GetNotificationSettingsResponses, GetRoomData, GetRoomErrors, GetRoomNotificationSettingsData, GetRoomNotificationSettingsErrors, GetRoomNotificationSettingsResponses, GetRoomResponses, GetRoomsData, GetRoomsErrors, GetRoomsResponses, GetRoomSubscriptionSettingsData, GetRoomSubscriptionSettingsErrors, GetRoomSubscriptionSettingsResponses, GetStorageDocumentData, GetStorageDocumentErrors, GetStorageDocumentResponses, GetThreadData, GetThreadErrors, GetThreadInboxNotificationsData, GetThreadInboxNotificationsErrors, GetThreadInboxNotificationsResponses, GetThreadParticipantsData, GetThreadParticipantsErrors, GetThreadParticipantsResponses, GetThreadResponses, GetThreadsData, GetThreadsErrors, GetThreadsResponses, GetThreadSubscriptionsData, GetThreadSubscriptionsErrors, GetThreadSubscriptionsResponses, GetUserGroupsData, GetUserGroupsErrors, GetUserGroupsResponses, GetUserRoomSubscriptionSettingsData, GetUserRoomSubscriptionSettingsErrors, GetUserRoomSubscriptionSettingsResponses, GetWebKnowledgeSourceLinksData, GetWebKnowledgeSourceLinksErrors, GetWebKnowledgeSourceLinksResponses, GetYjsDocumentAsBinaryUpdateData, GetYjsDocumentAsBinaryUpdateErrors, GetYjsDocumentAsBinaryUpdateResponses, GetYjsDocumentData, GetYjsDocumentErrors, GetYjsDocumentResponses, GetYjsVersionData, GetYjsVersionErrors, GetYjsVersionResponses, GetYjsVersionsData, GetYjsVersionsErrors, GetYjsVersionsResponses, IdentifyUserData, IdentifyUserErrors, IdentifyUserResponses, InitializeStorageDocumentData, InitializeStorageDocumentErrors, InitializeStorageDocumentResponses, MarkInboxNotificationAsReadData, MarkInboxNotificationAsReadErrors, MarkInboxNotificationAsReadResponses, MarkThreadAsResolvedData, MarkThreadAsResolvedErrors, MarkThreadAsResolvedResponses, MarkThreadAsUnresolvedData, MarkThreadAsUnresolvedErrors, MarkThreadAsUnresolvedResponses, PatchStorageDocumentData, PatchStorageDocumentErrors, PatchStorageDocumentResponses, PrewarmRoomData, PrewarmRoomErrors, PrewarmRoomResponses, RemoveCommentReactionData, RemoveCommentReactionErrors, RemoveCommentReactionResponses, RemoveGroupMembersData, RemoveGroupMembersErrors, RemoveGroupMembersResponses, SendYjsBinaryUpdateData, SendYjsBinaryUpdateErrors, SendYjsBinaryUpdateResponses, SetPresenceData, SetPresenceErrors, SetPresenceResponses, SubscribeToThreadData, SubscribeToThreadErrors, SubscribeToThreadResponses, TriggerInboxNotificationData, TriggerInboxNotificationErrors, TriggerInboxNotificationResponses, UnsubscribeFromThreadData, UnsubscribeFromThreadErrors, UnsubscribeFromThreadResponses, UpdateAiCopilotData, UpdateAiCopilotErrors, UpdateAiCopilotResponses, UpdateNotificationSettingsData, UpdateNotificationSettingsErrors, UpdateNotificationSettingsResponses, UpdateRoomData, UpdateRoomErrors, UpdateRoomIdData, UpdateRoomIdErrors, UpdateRoomIdResponses, UpdateRoomNotificationSettingsData, UpdateRoomNotificationSettingsErrors, UpdateRoomNotificationSettingsResponses, UpdateRoomOrganizationIdData, UpdateRoomOrganizationIdErrors, UpdateRoomOrganizationIdResponses, UpdateRoomResponses, UpdateRoomSubscriptionSettingsData, UpdateRoomSubscriptionSettingsErrors, UpdateRoomSubscriptionSettingsResponses, UpsertRoomData, UpsertRoomErrors, UpsertRoomResponses } from './types.gen';
+import type { AddCommentReactionData, AddCommentReactionErrors, AddCommentReactionResponses, AddGroupMembersData, AddGroupMembersErrors, AddGroupMembersResponses, AuthorizeUserData, AuthorizeUserErrors, AuthorizeUserResponses, BroadcastEventData, BroadcastEventErrors, BroadcastEventResponses, CreateAiCopilotData, CreateAiCopilotErrors, CreateAiCopilotResponses, CreateCommentData, CreateCommentErrors, CreateCommentResponses, CreateFeedData, CreateFeedErrors, CreateFeedMessageData, CreateFeedMessageErrors, CreateFeedMessageResponses, CreateFeedResponses, CreateFileKnowledgeSourceData, CreateFileKnowledgeSourceErrors, CreateFileKnowledgeSourceResponses, CreateGroupData, CreateGroupErrors, CreateGroupResponses, CreateRoomData, CreateRoomErrors, CreateRoomResponses, CreateThreadData, CreateThreadErrors, CreateThreadResponses, CreateWebKnowledgeSourceData, CreateWebKnowledgeSourceErrors, CreateWebKnowledgeSourceResponses, CreateYjsVersionData, CreateYjsVersionErrors, CreateYjsVersionResponses, DeleteAiCopilotData, DeleteAiCopilotErrors, DeleteAiCopilotResponses, DeleteAllInboxNotificationsData, DeleteAllInboxNotificationsErrors, DeleteAllInboxNotificationsResponses, DeleteCommentData, DeleteCommentErrors, DeleteCommentResponses, DeleteFeedData, DeleteFeedErrors, DeleteFeedMessageData, DeleteFeedMessageErrors, DeleteFeedMessageResponses, DeleteFeedResponses, DeleteFileKnowledgeSourceData, DeleteFileKnowledgeSourceErrors, DeleteFileKnowledgeSourceResponses, DeleteGroupData, DeleteGroupErrors, DeleteGroupResponses, DeleteInboxNotificationData, DeleteInboxNotificationErrors, DeleteInboxNotificationResponses, DeleteNotificationSettingsData, DeleteNotificationSettingsErrors, DeleteNotificationSettingsResponses, DeleteRoomData, DeleteRoomErrors, DeleteRoomNotificationSettingsData, DeleteRoomNotificationSettingsErrors, DeleteRoomNotificationSettingsResponses, DeleteRoomResponses, DeleteRoomSubscriptionSettingsData, DeleteRoomSubscriptionSettingsErrors, DeleteRoomSubscriptionSettingsResponses, DeleteStorageDocumentData, DeleteStorageDocumentErrors, DeleteStorageDocumentResponses, DeleteThreadData, DeleteThreadErrors, DeleteThreadResponses, DeleteWebKnowledgeSourceData, DeleteWebKnowledgeSourceErrors, DeleteWebKnowledgeSourceResponses, EditCommentData, EditCommentErrors, EditCommentMetadataData, EditCommentMetadataErrors, EditCommentMetadataResponses, EditCommentResponses, EditThreadMetadataData, EditThreadMetadataErrors, EditThreadMetadataResponses, GetActiveUsersData, GetActiveUsersErrors, GetActiveUsersResponses, GetAiCopilotData, GetAiCopilotErrors, GetAiCopilotResponses, GetAiCopilotsData, GetAiCopilotsErrors, GetAiCopilotsResponses, GetAttachmentData, GetAttachmentErrors, GetAttachmentResponses, GetCommentData, GetCommentErrors, GetCommentResponses, GetFeedData, GetFeedErrors, GetFeedMessagesData, GetFeedMessagesErrors, GetFeedMessagesResponses, GetFeedResponses, GetFeedsData, GetFeedsErrors, GetFeedsResponses, GetFileKnowledgeSourceMarkdownData, GetFileKnowledgeSourceMarkdownErrors, GetFileKnowledgeSourceMarkdownResponses, GetGroupData, GetGroupErrors, GetGroupResponses, GetGroupsData, GetGroupsErrors, GetGroupsResponses, GetInboxNotificationData, GetInboxNotificationErrors, GetInboxNotificationResponses, GetInboxNotificationsData, GetInboxNotificationsErrors, GetInboxNotificationsResponses, GetKnowledgeSourceData, GetKnowledgeSourceErrors, GetKnowledgeSourceResponses, GetKnowledgeSourcesData, GetKnowledgeSourcesErrors, GetKnowledgeSourcesResponses, GetNotificationSettingsData, GetNotificationSettingsErrors, GetNotificationSettingsResponses, GetRoomData, GetRoomErrors, GetRoomNotificationSettingsData, GetRoomNotificationSettingsErrors, GetRoomNotificationSettingsResponses, GetRoomResponses, GetRoomsData, GetRoomsErrors, GetRoomsResponses, GetRoomSubscriptionSettingsData, GetRoomSubscriptionSettingsErrors, GetRoomSubscriptionSettingsResponses, GetStorageDocumentData, GetStorageDocumentErrors, GetStorageDocumentResponses, GetThreadData, GetThreadErrors, GetThreadInboxNotificationsData, GetThreadInboxNotificationsErrors, GetThreadInboxNotificationsResponses, GetThreadParticipantsData, GetThreadParticipantsErrors, GetThreadParticipantsResponses, GetThreadResponses, GetThreadsData, GetThreadsErrors, GetThreadsResponses, GetThreadSubscriptionsData, GetThreadSubscriptionsErrors, GetThreadSubscriptionsResponses, GetUserGroupsData, GetUserGroupsErrors, GetUserGroupsResponses, GetUserRoomSubscriptionSettingsData, GetUserRoomSubscriptionSettingsErrors, GetUserRoomSubscriptionSettingsResponses, GetWebKnowledgeSourceLinksData, GetWebKnowledgeSourceLinksErrors, GetWebKnowledgeSourceLinksResponses, GetYjsDocumentAsBinaryUpdateData, GetYjsDocumentAsBinaryUpdateErrors, GetYjsDocumentAsBinaryUpdateResponses, GetYjsDocumentData, GetYjsDocumentErrors, GetYjsDocumentResponses, GetYjsVersionData, GetYjsVersionErrors, GetYjsVersionResponses, GetYjsVersionsData, GetYjsVersionsErrors, GetYjsVersionsResponses, IdentifyUserData, IdentifyUserErrors, IdentifyUserResponses, InitializeStorageDocumentData, InitializeStorageDocumentErrors, InitializeStorageDocumentResponses, MarkInboxNotificationAsReadData, MarkInboxNotificationAsReadErrors, MarkInboxNotificationAsReadResponses, MarkThreadAsResolvedData, MarkThreadAsResolvedErrors, MarkThreadAsResolvedResponses, MarkThreadAsUnresolvedData, MarkThreadAsUnresolvedErrors, MarkThreadAsUnresolvedResponses, PatchStorageDocumentData, PatchStorageDocumentErrors, PatchStorageDocumentResponses, PrewarmRoomData, PrewarmRoomErrors, PrewarmRoomResponses, RemoveCommentReactionData, RemoveCommentReactionErrors, RemoveCommentReactionResponses, RemoveGroupMembersData, RemoveGroupMembersErrors, RemoveGroupMembersResponses, SendYjsBinaryUpdateData, SendYjsBinaryUpdateErrors, SendYjsBinaryUpdateResponses, SetPresenceData, SetPresenceErrors, SetPresenceResponses, SubscribeToThreadData, SubscribeToThreadErrors, SubscribeToThreadResponses, TriggerInboxNotificationData, TriggerInboxNotificationErrors, TriggerInboxNotificationResponses, UnsubscribeFromThreadData, UnsubscribeFromThreadErrors, UnsubscribeFromThreadResponses, UpdateAiCopilotData, UpdateAiCopilotErrors, UpdateAiCopilotResponses, UpdateFeedData, UpdateFeedErrors, UpdateFeedMessageData, UpdateFeedMessageErrors, UpdateFeedMessageResponses, UpdateFeedResponses, UpdateNotificationSettingsData, UpdateNotificationSettingsErrors, UpdateNotificationSettingsResponses, UpdateRoomData, UpdateRoomErrors, UpdateRoomIdData, UpdateRoomIdErrors, UpdateRoomIdResponses, UpdateRoomNotificationSettingsData, UpdateRoomNotificationSettingsErrors, UpdateRoomNotificationSettingsResponses, UpdateRoomOrganizationIdData, UpdateRoomOrganizationIdErrors, UpdateRoomOrganizationIdResponses, UpdateRoomResponses, UpdateRoomSubscriptionSettingsData, UpdateRoomSubscriptionSettingsErrors, UpdateRoomSubscriptionSettingsResponses, UpsertRoomData, UpsertRoomErrors, UpsertRoomResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -588,6 +588,97 @@ export const editCommentMetadata = <ThrowOnError extends boolean = false>(option
  * This endpoint returns the inbox notifications associated with a specific thread. Because this endpoint is not user-scoped, each notification includes a `userId` field identifying which user the notification belongs to. Only thread-kind notifications are returned.
  */
 export const getThreadInboxNotifications = <ThrowOnError extends boolean = false>(options: Options<GetThreadInboxNotificationsData, ThrowOnError>) => (options.client ?? client).get<GetThreadInboxNotificationsResponses, GetThreadInboxNotificationsErrors, ThrowOnError>({ url: '/rooms/{roomId}/threads/{threadId}/inbox-notifications', ...options });
+
+/**
+ * Get room feeds
+ *
+ * This endpoint returns the feeds in the requested room. Corresponds to [`liveblocks.getFeeds`](https://liveblocks.io/docs/api-reference/liveblocks-node#get-rooms-roomId-feeds).
+ */
+export const getFeeds = <ThrowOnError extends boolean = false>(options: Options<GetFeedsData, ThrowOnError>) => (options.client ?? client).get<GetFeedsResponses, GetFeedsErrors, ThrowOnError>({ url: '/rooms/{roomId}/feeds', ...options });
+
+/**
+ * Create feed
+ *
+ * This endpoint creates a new feed in a room. Corresponds to [`liveblocks.createFeed`](https://liveblocks.io/docs/api-reference/liveblocks-node#post-rooms-roomId-feeds).
+ */
+export const createFeed = <ThrowOnError extends boolean = false>(options: Options<CreateFeedData, ThrowOnError>) => (options.client ?? client).post<CreateFeedResponses, CreateFeedErrors, ThrowOnError>({
+    url: '/rooms/{roomId}/feeds',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete feed
+ *
+ * This endpoint deletes a feed. Corresponds to [`liveblocks.deleteFeed`](https://liveblocks.io/docs/api-reference/liveblocks-node#delete-rooms-roomId-feeds-feedId).
+ */
+export const deleteFeed = <ThrowOnError extends boolean = false>(options: Options<DeleteFeedData, ThrowOnError>) => (options.client ?? client).delete<DeleteFeedResponses, DeleteFeedErrors, ThrowOnError>({ url: '/rooms/{roomId}/feeds/{feedId}', ...options });
+
+/**
+ * Get feed
+ *
+ * This endpoint returns a feed by its ID. Corresponds to [`liveblocks.getFeed`](https://liveblocks.io/docs/api-reference/liveblocks-node#get-rooms-roomId-feeds-feedId).
+ */
+export const getFeed = <ThrowOnError extends boolean = false>(options: Options<GetFeedData, ThrowOnError>) => (options.client ?? client).get<GetFeedResponses, GetFeedErrors, ThrowOnError>({ url: '/rooms/{roomId}/feeds/{feedId}', ...options });
+
+/**
+ * Update feed
+ *
+ * This endpoint updates the metadata of a feed. Corresponds to [`liveblocks.updateFeed`](https://liveblocks.io/docs/api-reference/liveblocks-node#patch-rooms-roomId-feeds-feedId).
+ */
+export const updateFeed = <ThrowOnError extends boolean = false>(options: Options<UpdateFeedData, ThrowOnError>) => (options.client ?? client).patch<UpdateFeedResponses, UpdateFeedErrors, ThrowOnError>({
+    url: '/rooms/{roomId}/feeds/{feedId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get feed messages
+ *
+ * This endpoint returns the messages in a feed. Corresponds to [`liveblocks.getFeedMessages`](https://liveblocks.io/docs/api-reference/liveblocks-node#get-rooms-roomId-feeds-feedId-messages).
+ */
+export const getFeedMessages = <ThrowOnError extends boolean = false>(options: Options<GetFeedMessagesData, ThrowOnError>) => (options.client ?? client).get<GetFeedMessagesResponses, GetFeedMessagesErrors, ThrowOnError>({ url: '/rooms/{roomId}/feeds/{feedId}/messages', ...options });
+
+/**
+ * Create feed message
+ *
+ * This endpoint creates a new message in a feed. Corresponds to [`liveblocks.createFeedMessage`](https://liveblocks.io/docs/api-reference/liveblocks-node#post-rooms-roomId-feeds-feedId-messages).
+ */
+export const createFeedMessage = <ThrowOnError extends boolean = false>(options: Options<CreateFeedMessageData, ThrowOnError>) => (options.client ?? client).post<CreateFeedMessageResponses, CreateFeedMessageErrors, ThrowOnError>({
+    url: '/rooms/{roomId}/feeds/{feedId}/messages',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete feed message
+ *
+ * This endpoint deletes a feed message. Corresponds to [`liveblocks.deleteFeedMessage`](https://liveblocks.io/docs/api-reference/liveblocks-node#delete-rooms-roomId-feeds-feedId-messages-messageId).
+ */
+export const deleteFeedMessage = <ThrowOnError extends boolean = false>(options: Options<DeleteFeedMessageData, ThrowOnError>) => (options.client ?? client).delete<DeleteFeedMessageResponses, DeleteFeedMessageErrors, ThrowOnError>({ url: '/rooms/{roomId}/feeds/{feedId}/messages/{messageId}', ...options });
+
+/**
+ * Update feed message
+ *
+ * This endpoint updates a feed message. Corresponds to [`liveblocks.updateFeedMessage`](https://liveblocks.io/docs/api-reference/liveblocks-node#patch-rooms-roomId-feeds-feedId-messages-messageId).
+ */
+export const updateFeedMessage = <ThrowOnError extends boolean = false>(options: Options<UpdateFeedMessageData, ThrowOnError>) => (options.client ?? client).patch<UpdateFeedMessageResponses, UpdateFeedMessageErrors, ThrowOnError>({
+    url: '/rooms/{roomId}/feeds/{feedId}/messages/{messageId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get access token with secret key

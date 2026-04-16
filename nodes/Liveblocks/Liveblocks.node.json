@@ -23,6 +23,7 @@
 		"yjs",
 		"hitl",
 		"comments",
-		"notifications"
+		"notifications",
+		"feeds"
 	]
 }
